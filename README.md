@@ -32,8 +32,8 @@ Windows 10, BT 4.0 adapter
 - **foreach** [device_mask]        : starts devices enumerating loop
 - **endfor**                       : end foreach loop<br/>
 - **if** <cmd> <params>            : start conditional block dependent on function returning w/o error
-     **elif**                      : another conditionals block
-     **else**                      : if condition == false block
+     - **elif**                      : another conditionals block
+     - **else**                      : if condition == false block
 - **endif**			   : end conditional block
 	
   _* you can also use standard C language string formating characters like \\t, \\n etc._
