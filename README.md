@@ -1,6 +1,8 @@
 # BLEConsole
 Windows command-line tool for interacting with Bluetooth LE devices
 
+## [Install via ClickOnce](https://raw.githubusercontent.com/sensboston/BLEConsole/master/publish/)
+
 ### Requirements:
 
 Windows 10, BT 4.0 adapter
