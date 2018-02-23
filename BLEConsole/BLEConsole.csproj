@@ -13,7 +13,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://raw.githubusercontent.com/sensboston/BLEConsole/master/publish/</InstallUrl>
+    <InstallUrl>https://raw.githubusercontent.com/sensboston/BLEConsole/master/BLEConsole/publish/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>0</ApplicationRevision>
