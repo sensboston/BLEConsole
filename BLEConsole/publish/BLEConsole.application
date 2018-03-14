@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xrml="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <assemblyIdentity name="BLEConsole.application" version="1.5.5.0" publicKeyToken="6868a54eaeacd1ac" language="neutral" processorArchitecture="amd64" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <description asmv2:publisher="Open" asmv2:product="BLEConsole" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <deployment install="true" mapFileExtensions="true">
+    <subscription>
+      <update>
+        <beforeApplicationStartup />
+      </update>
+    </subscription>
+    <deploymentProvider codebase="http://senssoft.com/BLEConsole/BLEConsole.application" />
+  </deployment>
+  <dependency>
+    <dependentAssembly dependencyType="install" codebase="Application Files\BLEConsole_1_5_5_0\BLEConsole.exe.manifest" size="14230">
+      <assemblyIdentity name="BLEConsole.exe" version="1.5.5.0" publicKeyToken="6868a54eaeacd1ac" language="neutral" processorArchitecture="amd64" type="win32" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>4i4LdVQOJBzEK+Rsn769md7ic4haoDg4Q/4Wth2DAlc=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
+    <framework targetVersion="4.6.1" profile="Full" supportedRuntime="4.0.30319" />
+  </compatibleFrameworks>
+<publisherIdentity name="E=sens.boston@gmail.com, CN=&quot;Open Source Developer, Sergey Svinolobov&quot;, S=MA, O=Open Source Developer, C=US" issuerKeyHash="c07bb4c8b76e56a709489af8724fd7d7242c363e" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>bIJp9vN8B24EdIkTGf9fZpthGwMFg821pGSF04iycSk=</DigestValue></Reference></SignedInfo><SignatureValue>XEHv9vn/cEcQQd6kdCZMw1XTqlGvu/GmFXO3uB4DCYOmCGPqmvGbfIM/ZMTdXqOrK1xF3vnyyaoZ67BvgwXndrWrZLGwr7Wj+ViInrHwEB6t8pwlezapCVbEH8G6VXQnUnu+iudM9uT6mpyKBw8eBCTIYdkE6LhCUSj2u9PQCOf9WY5VhzacbOe3ZjU0RQMivlJ3l5SqejZ+lQUbUV/qsugzdXwpV9QZyQWi4YnlxmTs9kHe1ble6oBoJIE39cRwWV5emSohXFcMbyRunCUKeE3gI29KYiOjjPm1U5fcGyI4v+f1kQVvdz3DOExsJdbjVQaIpO9YwVPXfsv2C31F5g==</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>tdVGjM86KI/znPGm+qVdu4Sc2uM4WVZIk7qX9ziHC2mDBaAYJ1tM/SQt3k01ZgjW8LLw2cB+bgb25KRfBYNiK0UpFMO7Ci+nADI0b2kUbu0BNzZlAlcV4h4DUibLjceKVYVAy4P7glCD/FoqGVs2J385inHMkT3qF1USUVRzML7cjgIK/UDGkbH9PP6XT0kO3jZEVApKysiLrG4np+C8EvyHbXd6xDNYZ3O+v8wlvBRPBhuPoxDMq2qaekm98qb3zt2CS1P5UOV5gONaxhQccGxogMfgRaviPwgsbUew3iqW0w/KM550TgTSnVHUekP2rnWmf8WGhSOc24AH33/gAQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="2971b288d38564a4b5cd8305031b619b665fff19138974046e077cf3f669826c" Description="" Url=""><as:assemblyIdentity name="BLEConsole.application" version="1.5.5.0" publicKeyToken="6868a54eaeacd1ac" language="neutral" processorArchitecture="amd64" xmlns="urn:schemas-microsoft-com:asm.v1" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>E=sens.boston@gmail.com, CN="Open Source Developer, Sergey Svinolobov", S=MA, O=Open Source Developer, C=US</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>pQ2FEyrBgNjteCQQ6f2c9AdMCe5x4OO/fVH3t+hguR0=</DigestValue></Reference></SignedInfo><SignatureValue>jQPGonc03x6/ejnNZKgl3fx+4y9nuYSJcLy5cY6ADGxVQitmMp9i62I/J2X8sz8tROfLBVOPx4tg0qzMYdp48oJbxNF5QKUM643Q26FjjnAG4IquUJpHMnTydZAFm1b31NJ9yiBeV9CfkV2c2kW+/ron3wdA0I2EgMd4CRWEv+iAsgSREPbGi5glOBOmnUrBXl/Hy2qemNW7FLOLgc8/gYJQwSJTS+OHecjoTyhZY23KtwlxCN+WzNvzSv1inxxJG+7edUCIFwqIZPwCiSRVbxuhx7FgBcpwq/kzlBoKNri5wJTBCA2vO/kMbj+xMdhCShnjchHPrxyb0wkNdNGRVQ==</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>tdVGjM86KI/znPGm+qVdu4Sc2uM4WVZIk7qX9ziHC2mDBaAYJ1tM/SQt3k01ZgjW8LLw2cB+bgb25KRfBYNiK0UpFMO7Ci+nADI0b2kUbu0BNzZlAlcV4h4DUibLjceKVYVAy4P7glCD/FoqGVs2J385inHMkT3qF1USUVRzML7cjgIK/UDGkbH9PP6XT0kO3jZEVApKysiLrG4np+C8EvyHbXd6xDNYZ3O+v8wlvBRPBhuPoxDMq2qaekm98qb3zt2CS1P5UOV5gONaxhQccGxogMfgRaviPwgsbUew3iqW0w/KM550TgTSnVHUekP2rnWmf8WGhSOc24AH33/gAQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIFKzCCBBOgAwIBAgIQIFG9at05BXWuzSSyWsVsqjANBgkqhkiG9w0BAQsFADCBgDELMAkGA1UEBhMCUEwxIjAgBgNVBAoMGVVuaXpldG8gVGVjaG5vbG9naWVzIFMuQS4xJzAlBgNVBAsMHkNlcnR1bSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTEkMCIGA1UEAwwbQ2VydHVtIENvZGUgU2lnbmluZyBDQSBTSEEyMB4XDTE4MDIyMjIwMzMwMFoXDTE5MDIyMjIwMzMwMFowgZMxCzAJBgNVBAYTAlVTMR4wHAYDVQQKDBVPcGVuIFNvdXJjZSBEZXZlbG9wZXIxCzAJBgNVBAgMAk1BMTEwLwYDVQQDDChPcGVuIFNvdXJjZSBEZXZlbG9wZXIsIFNlcmdleSBTdmlub2xvYm92MSQwIgYJKoZIhvcNAQkBFhVzZW5zLmJvc3RvbkBnbWFpbC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC11UaMzzooj/Oc8ab6pV27hJza4zhZVkiTupf3OIcLaYMFoBgnW0z9JC3eTTVmCNbwsvDZwH5uBvbkpF8Fg2IrRSkUw7sKL6cAMjRvaRRu7QE3NmUCVxXiHgNSJsuNx4pVhUDLg/uCUIP8WioZWzYnfzmKccyRPeoXVRJRVHMwvtyOAgr9QMaRsf08/pdPSQ7eNkRUCkrKyIusbien4LwS/Idtd3rEM1hnc76/zCW8FE8GG4+jEMyrapp6Sb3ypvfO3YJLU/lQ5XmA41rGFBxwbGiAx+BFq+I/CCxtR7DeKpbTD8oznnROBNKdUdR6Q/audaZ/xYaFI5zbgAfff+ABAgMBAAGjggGKMIIBhjAMBgNVHRMBAf8EAjAAMDIGA1UdHwQrMCkwJ6AloCOGIWh0dHA6Ly9jcmwuY2VydHVtLnBsL2NzY2FzaGEyLmNybDBxBggrBgEFBQcBAQRlMGMwKwYIKwYBBQUHMAGGH2h0dHA6Ly9jc2Nhc2hhMi5vY3NwLWNlcnR1bS5jb20wNAYIKwYBBQUHMAKGKGh0dHA6Ly9yZXBvc2l0b3J5LmNlcnR1bS5wbC9jc2Nhc2hhMi5jZXIwHwYDVR0jBBgwFoAUwHu0yLduVqcJSJr4ck/X1yQsNj4wHQYDVR0OBBYEFG1smo++2r/4lMh/Rlt+RFTJJkmTMB0GA1UdEgQWMBSBEmNzY2FzaGEyQGNlcnR1bS5wbDAOBgNVHQ8BAf8EBAMCB4AwSwYDVR0gBEQwQjAIBgZngQwBBAEwNgYLKoRoAYb2dwIFAQQwJzAlBggrBgEFBQcCARYZaHR0cHM6Ly93d3cuY2VydHVtLnBsL0NQUzATBgNVHSUEDDAKBggrBgEFBQcDAzANBgkqhkiG9w0BAQsFAAOCAQEAfQ3j4aVXEKp7H6/22n8jduZ1cZSftMA8FhxcqeNJF/9f0HZ8gkEb7fEozurjKq5jcyFqzHusoMfom8CxBesHhT0FZq1eaPVzIbhVF65c2k6SlAtmQ8XK3eqRQQqb0q62rMCCS3VX9egmctFD+brXzfuw4KUykmhSlskNNNb/hewQrBH7JHs+rGD//T4SZ4cDxA7jWeYV0JXSkypvCZED6VnJYGfI5x0XVMWVJcKMX4B/p7a9PkPz4BWywPAlN9hiZGowxer+mrdTBwoVQTAU+qxyLJ25TnMai8ZnNnk+1GQA+O3ypgeES+ZaKp+ZTr3DdCsptcZ+X/c/dTHysTZqWg==</X509Certificate><X509Certificate>MIIE3jCCA8agAwIBAgIQazJqDwMo03odUwv9I71I4jANBgkqhkiG9w0BAQsFADB+MQswCQYDVQQGEwJQTDEiMCAGA1UEChMZVW5pemV0byBUZWNobm9sb2dpZXMgUy5BLjEnMCUGA1UECxMeQ2VydHVtIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MSIwIAYDVQQDExlDZXJ0dW0gVHJ1c3RlZCBOZXR3b3JrIENBMB4XDTE1MTAyOTExMzAyOVoXDTI3MDYwOTExMzAyOVowgYAxCzAJBgNVBAYTAlBMMSIwIAYDVQQKDBlVbml6ZXRvIFRlY2hub2xvZ2llcyBTLkEuMScwJQYDVQQLDB5DZXJ0dW0gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkxJDAiBgNVBAMMG0NlcnR1bSBDb2RlIFNpZ25pbmcgQ0EgU0hBMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALfbqNjI47za2oO6ub/W1VdTQbdAuhcMRJXU6WY7f7S+kKOUCaWtISAXgEa0QyY+jksaZOwOQDJD/IKf/0ot6pTdWhE2i2Hv7BbUSQPY513DZVvyTgsrw8FT+kAtwqszJAWBcH7Ih0yf0YDCGHsOFL1OA0PLKEiwLeY23xs9i8OMnTee4QbXJVDfeT3at1/rRr52KDa4AgBGA9A0G3i0KMdRx8iVP26NiRjcSfHCDxr0gYHHbdQEd8Uhoy5T+XfP3Kmbw8Hl1WcvMbzAwmicSpblH/HzSDUO9uSxxe+HgDrigAw0nfoUZHHkHKGqss8Ap+M3cvlArZ4olQINzpDjW8UCAwEAAaOCAVMwggFPMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFMB7tMi3blanCUia+HJP19ckLDY+MB8GA1UdIwQYMBaAFAh2zcsH/yT2xc3tu5C84oQ3RnX3MA4GA1UdDwEB/wQEAwIBBjATBgNVHSUEDDAKBggrBgEFBQcDAzAvBgNVHR8EKDAmMCSgIqAghh5odHRwOi8vY3JsLmNlcnR1bS5wbC9jdG5jYS5jcmwwawYIKwYBBQUHAQEEXzBdMCgGCCsGAQUFBzABhhxodHRwOi8vc3ViY2Eub2NzcC1jZXJ0dW0uY29tMDEGCCsGAQUFBzAChiVodHRwOi8vcmVwb3NpdG9yeS5jZXJ0dW0ucGwvY3RuY2EuY2VyMDkGA1UdIAQyMDAwLgYEVR0gADAmMCQGCCsGAQUFBwIBFhhodHRwOi8vd3d3LmNlcnR1bS5wbC9DUFMwDQYJKoZIhvcNAQELBQADggEBAKrlP3ZUAkxwDimpOZYGDzG3C/Gmi1L7EI9PQluMvTEjAWad6CmhTcNQ+vf4RQ4dgtf8/qYyBHP9cezMiA+jkgjFgVgC/QtpO824P0k90I0cExRoLpsNmq2wGeKe0nw5d4hvI/17hPxEbbW6a3CSVWyUsdg3/alZHbRjstwTzXiOJTXBmo83hC7URczj9cyNc6jjOm3nlZRwV5FQtm3vc3JPLwKHYOLqIqHtPv3Ri2aNLnJtT8ZdNe6TqJjSZ2rp2hnNAoP5dPxfehgEKB7dIjM7dmxHBV3VUv4OunbzgxDHbjBfp2DH+nQnMZsog+0hihvxI1KE7ZW8rTqlo0IBnbw=</X509Certificate></X509Data></KeyInfo><Object><as:Timestamp>MIIIDwYJKoZIhvcNAQcCoIIIADCCB/wCAQExCzAJBgUrDgMCGgUAMIIBEwYJKoZI
+hvcNAQcBoIIBBASCAQCNA8aidzTfHr96Oc1kqCXd/H7jL2e5hIlwvLlxjoAMbFVC
+K2Yyn2LrYj8nZfyzPy1E58sFU4/Hi2DSrMxh2njyglvE0XlApQzrjdDboWOOcAbg
+iq5QmkcydPJ1kAWbVvfU0n3KIF5X0J+RXZzaRb7+uiffB0DQjYSAx3gJFYS/6ICy
+BJEQ9saLmCU4E6adSsFeX8fLap6Y1bsUs4uBzz+BglDBIlNL44d5yOhPKFljbcq3
+CXEI35bM2/NK/WKfHEkb7t51QIgXCohk/AKJJFVvG6HHsWAFynCr+TOUGgo2uLnA
+lMEIDa87+QxuP7Ex2EJKGeNyEc+vHJvTCQ100ZFVoIIEnTCCBJkwggOBoAMCAQIC
+DxaI8DklXmOOaRQ5B+YzCzANBgkqhkiG9w0BAQUFADCBlTELMAkGA1UEBhMCVVMx
+CzAJBgNVBAgTAlVUMRcwFQYDVQQHEw5TYWx0IExha2UgQ2l0eTEeMBwGA1UEChMV
+VGhlIFVTRVJUUlVTVCBOZXR3b3JrMSEwHwYDVQQLExhodHRwOi8vd3d3LnVzZXJ0
+cnVzdC5jb20xHTAbBgNVBAMTFFVUTi1VU0VSRmlyc3QtT2JqZWN0MB4XDTE1MTIz
+MTAwMDAwMFoXDTE5MDcwOTE4NDAzNlowgYQxCzAJBgNVBAYTAkdCMRswGQYDVQQI
+ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoT
+EUNPTU9ETyBDQSBMaW1pdGVkMSowKAYDVQQDEyFDT01PRE8gU0hBLTEgVGltZSBT
+dGFtcGluZyBTaWduZXIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDp
+6T3f1zcIyR44slJTQm0i8bHEBgRrnv2CdFBDfcagux9O+QJxJrHvQ9iDjEj85w+X
+eprrnN6mow47HEQYdY54pRdp/kkYpOK7XE7+jipUelDw1fbMkeeZedfeeZTXljP+
+DoO+Ir9jFiyj3Sgbrz2r6pfS8b8EEOc9SEX9H2hlwX9ZmWnAIjEMYm6nXGUBIbBj
+xCIYJ+7m/NIAPUcuqLiGVl0E3BMXJW4c30QPFc2326VXdkJvAGiCmdLjwd7wi5RX
+TOwIkCIhziIrmAxC5kKTlJiT7/0G2T+8W5tUPCCx7mrWR3rFq4DpMJre8aQ/VU0K
+CTSKdSnSaa2XD1C/+MoJAgMBAAGjgfQwgfEwHwYDVR0jBBgwFoAU2u1kdBScFDyr
+3ZmpvVsoTYs8ydgwHQYDVR0OBBYEFI5rLTNr9DOnk7MTmqXgCvcSNWqIMA4GA1Ud
+DwEB/wQEAwIGwDAMBgNVHRMBAf8EAjAAMBYGA1UdJQEB/wQMMAoGCCsGAQUFBwMI
+MEIGA1UdHwQ7MDkwN6A1oDOGMWh0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VVE4t
+VVNFUkZpcnN0LU9iamVjdC5jcmwwNQYIKwYBBQUHAQEEKTAnMCUGCCsGAQUFBzAB
+hhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBBQUAA4IBAQC6
+MyRAQIx821ifs2CYsvXAMf7rH25Q9grg5OaBrSaHot/9s9r0c/MA+ykbiRsVPttr
+UpMrxKw5gdc8Z1eaOTbgKAia4zlPm4kJf3vFYX9ZiTIlCmquGj7woieotsO4h/cW
+BEhBPVzY7J9NIDEE2WWh7c1pB1MWPd02AgqI60DlBjALuBZL3O+8VQn/xj4SLnaz
+3M5C7/l2V+G3CgVAmFiaXXEWk3GMZYHqb/OJ9/tzrbTnv9mOb6oLTyXzuOHV3XWY
+aIH4qsDRgMLExDmJwfbJnmzXdPnZl/hPwpoKzV6P+Bnp4KWfxPCSIeYteSXJIvnD
+8DqEV606FvRjlBAdXdDGMYICMDCCAiwCAQEwgakwgZUxCzAJBgNVBAYTAlVTMQsw
+CQYDVQQIEwJVVDEXMBUGA1UEBxMOU2FsdCBMYWtlIENpdHkxHjAcBgNVBAoTFVRo
+ZSBVU0VSVFJVU1QgTmV0d29yazEhMB8GA1UECxMYaHR0cDovL3d3dy51c2VydHJ1
+c3QuY29tMR0wGwYDVQQDExRVVE4tVVNFUkZpcnN0LU9iamVjdAIPFojwOSVeY45p
+FDkH5jMLMAkGBSsOAwIaBQCgXTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwG
+CSqGSIb3DQEJBTEPFw0xODAyMjcxOTUwNTBaMCMGCSqGSIb3DQEJBDEWBBQGa07I
+cqrwRs2uFKdcgnXFgTM1tDANBgkqhkiG9w0BAQEFAASCAQCSo7R4OHM6l5onjoys
+3PfX/2xpw64cRzgW6ytLMVOXSM43zzeI7s477A5fVTWdsXQhLVggW4UNYSba4mNg
+PInf01bbaz9vObU3gA8kwqBi9WbzA4uQT+nf69CwnZRSVsJMrwOywdVubvyUTXeJ
+NshSrD1kFxP/1PByieyxsRB1nxCc+i7vV4VXSm4PPkRJI9JD0lrGJ+Mg23K76lRC
+mm+RkXmmmtaVOkHNxp7qh+ELM81YrOzsQk+I/DggY0aDOSz6bdOyxm+pVGsUKeoa
+BzVDkq2WkfK3PcwhRN+Jd/vBqN5Nf3LtD4N8/YlhUUluOzs+U/+GBDQ8lJlq/rWw
+jQTj
+</as:Timestamp></Object></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
