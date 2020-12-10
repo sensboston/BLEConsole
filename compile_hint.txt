@@ -1,0 +1,8 @@
+This project may not compile right out of the box. I got:
+"Error	CS0234	The type or namespace name 'Devices' does not exist in the namespace 'Windows' (are you missing an assembly reference?)"
+
+Apparently the following line of BLEConsole.csproj needed an update:
+  <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd</HintPath>
+
+The path must be corrected for the development machine's Windows Kit install. In my case:
+  <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.17763.0\Windows.winmd</HintPath>
