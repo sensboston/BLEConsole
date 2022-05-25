@@ -2,5 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/BLEConsole/v15
-/BLEConsole/obj/Debug
+*.suo
+*.user
+_ReSharper.*
+bin
+obj
+packages
