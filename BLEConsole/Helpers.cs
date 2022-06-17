@@ -9,6 +9,7 @@ using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace BLEConsole
 {
@@ -436,7 +437,7 @@ namespace BLEConsole
                 // For text formats, use CryptographicBuffer
                 if (format == DataFormat.ASCII || format == DataFormat.UTF8)
                 {
-                    return CryptographicBuffer.ConvertStringToBinary(data, BinaryStringEncoding.Utf8);
+                    return CryptographicBuffer.ConvertStringToBinary(Regex.Unescape(data), BinaryStringEncoding.Utf8);
                 }
                 else
                 {
