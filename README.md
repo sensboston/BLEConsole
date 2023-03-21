@@ -58,3 +58,40 @@ foreach
 	endif
 endfor
 ```
+
+### Below is an example of interactive use of the BLEConsole:
+
+You can use BT name or # provided by **list** command. For example, run BLEConsole, type **ls** and it should list available BT devices, like
+```
+BLE: ls
+#00: F2
+#01: TOZO-S2
+```
+Than use command **open #1** or **open TOZO-S2** (you can also use partial name, like TOZ if no more BLE devices with tat name exist), you'll get an output like
+```
+BLE: open #1
+Connecting to TOZO-S2.
+Found 3 services:
+#00: GenericAccess
+#01: GenericAttribute
+#02: 2800
+```
+
+Now you can set active service and list characteristics, by issuing command **set #0** 
+```
+BLE: set #0
+Selected service GenericAccess.
+#00: DeviceName RW
+#01: Appearance R
+#02: PeripheralPreferredConnectionParameters    R
+#03: 10918      R
+```
+
+Now you can read characteristic by # or name, like **read #0**
+```
+BLE: read #0
+TOZO-S2
+```
+
+If you already knew your service name/#, you can avoid previous step and read characteristic after successful  connection to BLE device, like **read #1/#0**
+
