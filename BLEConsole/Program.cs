@@ -879,7 +879,7 @@ namespace BLEConsole
                                 Console.WriteLine(Utilities.FormatValue(result.Value, _dataFormat));
                             else
                             {
-                                Console.WriteLine($"Read failed: {result.Status} 0x{result.ProtocolError:X2}");
+                                Console.WriteLine($"Read failed: {result.Status} {Utilities.FormatProtocolError(result.ProtocolError)}");
                                 retVal += 1;
                             }
                         }
@@ -1010,7 +1010,7 @@ namespace BLEConsole
                                 if (result.Status != GattCommunicationStatus.Success)
                                 {
                                     if (!Console.IsOutputRedirected)
-                                        Console.WriteLine($"Write failed: {result.Status} 0x{result.ProtocolError:X2}");
+                                        Console.WriteLine($"Write failed: {result.Status} {Utilities.FormatProtocolError(result.ProtocolError)}");
                                     retVal += 1;
                                 }
                             }
