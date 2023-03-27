@@ -117,6 +117,23 @@ namespace BLEConsole
             }
         }
 
+        public string Uuid
+        {
+            get
+            {
+                switch (AttributeDisplayType)
+                {
+                    case AttributeType.Service:
+                        return service.Uuid.ToString();
+                    case AttributeType.Characteristic:
+                        return characteristic.Uuid.ToString();
+                    default:
+                        break;
+                }
+                return "Invalid";
+            }
+        }
+
         public AttributeType AttributeDisplayType { get; }
 
         /// <summary>
@@ -503,14 +520,14 @@ namespace BLEConsole
             }
             // else try to find name
             else
-            { 
+            {
                 // ... for devices
                 if (collection is List<DeviceInformation>)
                 {
                     var foundDevices = (collection as List<DeviceInformation>).Where(d => d.Name.ToLower().StartsWith(name.ToLower())).ToList();
                     if (foundDevices.Count == 0)
                     {
-                        if(!Console.IsOutputRedirected)
+                        if (!Console.IsOutputRedirected)
                             Console.WriteLine("Can't connect to {0}.", name);
                     }
                     else if (foundDevices.Count == 1)
@@ -526,6 +543,14 @@ namespace BLEConsole
                 // for services or attributes
                 else
                 {
+                    // search for service/characteristic by uuid
+                    var foundByUuid = (collection as List<BluetoothLEAttributeDisplay>).Where(d => name.Equals(d.Uuid)).ToList();
+                    if (foundByUuid.Count == 1)
+                    {
+                        return foundByUuid.First().Name;
+                    }
+
+                    // search for service/characteristic by name
                     var foundDispAttrs = (collection as List<BluetoothLEAttributeDisplay>).Where(d => d.Name.ToLower().StartsWith(name.ToLower())).ToList();
                     if (foundDispAttrs.Count == 0)
                     {
