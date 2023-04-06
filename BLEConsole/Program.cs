@@ -751,7 +751,7 @@ namespace BLEConsole
                                         {
                                             var charToDisplay = new BluetoothLEAttributeDisplay(characteristics[i]);
                                             _characteristics.Add(charToDisplay);
-                                            maxNameLength = charToDisplay.Name.Length;
+                                            maxNameLength = Math.Max(maxNameLength, charToDisplay.Name.Length);
                                         }
                                         if (!Console.IsInputRedirected)
                                         {
