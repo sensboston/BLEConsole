@@ -746,11 +746,20 @@ namespace BLEConsole
 
                                     if (characteristics.Count > 0)
                                     {
+                                        int maxNameLength = 0;
                                         for (int i = 0; i < characteristics.Count; i++)
                                         {
                                             var charToDisplay = new BluetoothLEAttributeDisplay(characteristics[i]);
                                             _characteristics.Add(charToDisplay);
-                                            if (!Console.IsInputRedirected) Console.WriteLine($"#{i:00}: {charToDisplay.Name}\t{charToDisplay.Chars}");
+                                            maxNameLength = Math.Max(maxNameLength, charToDisplay.Name.Length);
+                                        }
+                                        if (!Console.IsInputRedirected)
+                                        {
+                                            for (int i = 0; i < characteristics.Count; i++)
+                                            {
+                                                var charToDisplay = new BluetoothLEAttributeDisplay(characteristics[i]);
+                                                Console.WriteLine($"#{i:00}: {charToDisplay.Name.PadRight(maxNameLength)}   {charToDisplay.Chars}");
+                                            }
                                         }
                                     }
                                     else
@@ -879,7 +888,7 @@ namespace BLEConsole
                                 Console.WriteLine(Utilities.FormatValue(result.Value, _dataFormat));
                             else
                             {
-                                Console.WriteLine($"Read failed: {result.Status} 0x{result.ProtocolError:X2}");
+                                Console.WriteLine($"Read failed: {result.Status} {Utilities.FormatProtocolError(result.ProtocolError)}");
                                 retVal += 1;
                             }
                         }
@@ -1010,7 +1019,7 @@ namespace BLEConsole
                                 if (result.Status != GattCommunicationStatus.Success)
                                 {
                                     if (!Console.IsOutputRedirected)
-                                        Console.WriteLine($"Write failed: {result.Status} 0x{result.ProtocolError:X2}");
+                                        Console.WriteLine($"Write failed: {result.Status} {Utilities.FormatProtocolError(result.ProtocolError)}");
                                     retVal += 1;
                                 }
                             }
