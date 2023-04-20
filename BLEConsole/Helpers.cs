@@ -35,7 +35,7 @@ namespace BLEConsole
             AttributeDisplayType = AttributeType.Characteristic;
         }
 
-        public string Chars => (CanRead ? "R" : " ") + (CanWrite ? "W" : " ") + (CanNotify ? "N" : " ");
+        public string Chars => (CanRead ? "R" : " ") + (CanWrite ? "W" : " ") + (CanNotify ? "N" : " ") + (CanIndicate ? "I": " ");
 
         public bool CanRead
         {
@@ -63,6 +63,14 @@ namespace BLEConsole
             get
             {
                 return this.characteristic != null ? this.characteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify) : false;
+            }
+        }
+
+        public bool CanIndicate
+        {
+            get
+            {
+                return this.characteristic != null ? this.characteristic.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Indicate) : false;
             }
         }
 
