@@ -1222,6 +1222,8 @@ namespace BLEConsole
             {
                 foreach (var sub in _subscribers)
                 {
+                    if (!Console.IsOutputRedirected)
+                        Console.WriteLine($"Unsubscribe from {sub.Uuid}");
                     await sub.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
                     sub.ValueChanged -= Characteristic_ValueChanged;
                 }
@@ -1230,7 +1232,8 @@ namespace BLEConsole
             // unsubscribe from specific event
             else
             {
-
+                if (!Console.IsOutputRedirected)
+                    Console.WriteLine("Not supported, please use \"unsubs all\"");
             }
         }
 
