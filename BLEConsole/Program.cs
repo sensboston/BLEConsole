@@ -1126,11 +1126,36 @@ namespace BLEConsole
                             // First, check for existing subscription
                             if (!_subscribers.Contains(attr.characteristic))
                             {
-                                var status = await attr.characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                                var charDisplay = new BluetoothLEAttributeDisplay(attr.characteristic);
+                                if (!charDisplay.CanNotify && !charDisplay.CanIndicate)
+                                {
+                                    if (!Console.IsOutputRedirected)
+                                        Console.WriteLine($"Characteristic {useName} does not support notify or indicate");
+                                    retVal += 1;
+                                    return retVal;
+                                }
+
+                                GattCommunicationStatus status;
+                                if (charDisplay.CanNotify)
+                                {
+                                    status = await attr.characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                                } 
+                                else 
+                                {
+                                    status = await attr.characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
+                                }
                                 if (status == GattCommunicationStatus.Success)
                                 {
                                     _subscribers.Add(attr.characteristic);
                                     attr.characteristic.ValueChanged += Characteristic_ValueChanged;
+                                    if (!Console.IsOutputRedirected)
+                                    {
+                                        if (charDisplay.CanNotify) 
+                                            Console.WriteLine($"Subscribed to characteristic {useName} (notify)");
+                                        else
+                                            Console.WriteLine($"Subscribed to characteristic {useName} (indicate)");
+                                    }
+
                                 }
                                 else
                                 {
@@ -1197,6 +1222,8 @@ namespace BLEConsole
             {
                 foreach (var sub in _subscribers)
                 {
+                    if (!Console.IsOutputRedirected)
+                        Console.WriteLine($"Unsubscribe from {sub.Uuid}");
                     await sub.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
                     sub.ValueChanged -= Characteristic_ValueChanged;
                 }
@@ -1205,7 +1232,8 @@ namespace BLEConsole
             // unsubscribe from specific event
             else
             {
-
+                if (!Console.IsOutputRedirected)
+                    Console.WriteLine("Not supported, please use \"unsubs all\"");
             }
         }
 
