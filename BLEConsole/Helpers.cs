@@ -865,6 +865,57 @@ namespace BLEConsole
         }
 
         /// <summary>
+        /// This function converts IBuffer data to string by specified list of formats
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static string FormatValueMultipleFormattes(IBuffer buffer, List<DataFormat> formatList)
+        {
+            byte[] data;
+            String stringBuffer = "";
+
+            CryptographicBuffer.CopyToByteArray(buffer, out data);
+            for(int dataFormatIdx = 0; dataFormatIdx < formatList.Count; dataFormatIdx++)
+            {
+                DataFormat dataFormat = formatList[dataFormatIdx];
+                switch (dataFormat)
+                {
+                    case DataFormat.ASCII:
+                        stringBuffer += $"ascii: {Encoding.ASCII.GetString(data)}";
+                        break;
+
+                    case DataFormat.UTF8:
+                        stringBuffer += $"utf8:\t{Encoding.UTF8.GetString(data)}";
+                        break;
+
+                    case DataFormat.Dec:
+                        stringBuffer += $"dec:\t{string.Join(" ", data.Select(b => b.ToString("00")))}";
+                        break;
+
+                    case DataFormat.Hex:
+                        stringBuffer += $"hex:\t{BitConverter.ToString(data).Replace("-", " ")}";
+                        break;
+
+                    case DataFormat.Bin:
+                        var s = string.Empty;
+                        foreach (var b in data) s += Convert.ToString(b, 2).PadLeft(8, '0') + " ";
+                        stringBuffer += $"bin:\t{s}";
+                        break;
+
+                    default:
+                        stringBuffer += $"ascii: {Encoding.ASCII.GetString(data)}";
+                        break;
+                }
+                if(dataFormatIdx != formatList.Count - 1)
+                    {
+                        stringBuffer += "\n";
+                    }
+            }
+            return stringBuffer;
+        }
+
+        /// <summary>
         /// Format data for writing by specific format
         /// </summary>
         /// <param name="data"></param>
@@ -902,6 +953,56 @@ namespace BLEConsole
         }
 
         /// <summary>
+        /// This function checks whether the given string is a valid 6-byte bluetooth address.
+        /// </summary>
+        /// <param name="name">name on which to check for a valid bluetooth address</param>
+        /// <returns>True if a valid bluetooth address is found, false otherwises</returns>
+        public static bool CheckForValidBluetoothAddress(string name)
+        {
+            // Format of a bluetooth address: xx:xx:xx:xx:xx:xx
+            const int bdAddressLength = 17;
+            const int bdAddressColonCount = 5;
+
+            // The length must match.
+            if (name.Length != bdAddressLength)
+            {
+                return false;
+            }
+
+            // It should contain the right amount of colons.
+            if((name.Split(':').Length - 1) != bdAddressColonCount)
+            {
+                return false;
+            }
+
+            // Only valid hex characters are accepted.
+            string lowerCaseName = name.ToLower();
+            foreach (char c in lowerCaseName)
+            {
+                if (((c >= '0' && c <= '9') ||
+                     (c >= 'a' && c <= 'f') ||
+                     (c == ':')) == false)
+                {
+                    return false;
+                }
+            }
+
+            // The colons must be in the proper indices (The length is already checked previously, so direct indexing is ok).
+            char colon = ':';
+            if ((name[2] != colon) ||
+                (name[5] != colon) ||
+                (name[8] != colon) ||
+                (name[11] != colon) ||
+                (name[14] != colon))
+            {
+                return false;
+            }
+
+            // Valid bluetooth address detected.
+            return true;
+        }
+
+        /// <summary>
         /// This function is trying to find device or service or attribute by name or number
         /// </summary>
         /// <param name="collection">source collection</param>
@@ -925,8 +1026,9 @@ namespace BLEConsole
                             result = (collection as List<DeviceInformation>)[devNumber].Id;
                         }
                         else
-                            if(Console.IsOutputRedirected)
+                        {
                                 Console.WriteLine("Device number {0:00} is not in device list range", devNumber);
+                        }
                     }
                     // for services or attributes
                     else
@@ -940,6 +1042,23 @@ namespace BLEConsole
                 else
                     if (!Console.IsOutputRedirected)
                         Console.WriteLine("Invalid device number {0}", name.Substring(1));
+            }
+            else if (CheckForValidBluetoothAddress(name)) {
+                var foundDevices = (collection as List<DeviceInformation>).Where(d => d.Id.ToLower().Contains(name.ToLower())).ToList();
+                if (foundDevices.Count == 0)
+                {
+                    if (!Console.IsOutputRedirected)
+                        Console.WriteLine("Can't connect to {0}.", name);
+                }
+                else if (foundDevices.Count == 1)
+                {
+                    result = foundDevices.First().Id;
+                }
+                else
+                {
+                    if (!Console.IsOutputRedirected)
+                        Console.WriteLine("Found multiple devices with names started from {0}. Please provide an exact name.", name);
+                }
             }
             // else try to find name
             else

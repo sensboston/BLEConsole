@@ -8,6 +8,7 @@ using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using System.Reflection;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.Diagnostics.Eventing.Reader;
 
 namespace BLEConsole
 {
@@ -32,8 +33,11 @@ namespace BLEConsole
         // Only one registered characteristic at a time.
         static List<GattCharacteristic> _subscribers = new List<GattCharacteristic>();
 
-        // Current data format
-        static DataFormat _dataFormat = DataFormat.UTF8;
+        // Current received data format
+        static DataFormat _sendDataFormat = DataFormat.UTF8;
+
+        // Current send data format
+        static List<DataFormat> _receivedDataFormat = new List<DataFormat> { DataFormat.UTF8, DataFormat.Hex };
 
         static string _versionInfo;
 
@@ -51,7 +55,6 @@ namespace BLEConsole
         static int _exitCode = 0;
         static ManualResetEvent _notifyCompleteEvent = null;
         static ManualResetEvent _delayEvent = null;
-        static bool _primed = false;
 
         static TimeSpan _timeout = TimeSpan.FromSeconds(3);
 
@@ -320,7 +323,18 @@ namespace BLEConsole
 
                 case "fmt":
                 case "format":
-                    ChangeDisplayFormat(parameters);
+                    ChangeSendDataFormat(parameters);
+                    ChangeReceivedDataFormat(parameters);
+                    break;
+
+                case "fmts":
+                case "format_send":
+                    ChangeSendDataFormat(parameters);
+                    break;
+
+                case "fmtr":
+                case "format_receive":
+                    ChangeReceivedDataFormat(parameters);
                     break;
 
                 case "set":
@@ -373,7 +387,7 @@ namespace BLEConsole
                 "\n  help, ?\t\t\t: show help information\n"+
                 "  quit, q\t\t\t: quit from application\n"+
                 "  list, ls [w]\t\t\t: show available BLE devices\n" +
-                "  open <name> or <#>\t\t: connect to BLE device\n" +
+                "  open <name>, <#> or <address>\t: connect to BLE device\n" +
                 "  delay <msec>\t\t\t: pause execution for a certain number of milliseconds\n" +
                 "  timeout <sec>\t\t\t: show/change connection timeout, default value is 3 sec\n" +
                 "  close\t\t\t\t: disconnect from currently connected device\n" +
@@ -385,7 +399,9 @@ namespace BLEConsole
                 "  \t\t\t\t: %name - device BlueTooth name\n" +
                 "  \t\t\t\t: %stat - device connection status\n" +
                 "  \t\t\t\t: %NOW, %now, %HH, %hh, %mm, %ss, %D, %d, %T, %t, %z - date/time variables\n" +
-                "  format [data_format], fmt\t: show/change display format, can be ASCII/UTF8/Dec/Hex/Bin\n" +
+                "  format [data_format], fmt\t: show/change display format for received and sent data, can be ASCII/UTF8/Dec/Hex/Bin\n" +
+                "  format_send [data_format],\n  fmts\t\t\t\t: show/change data format for sending data, can be ASCII/UTF8/Dec/Hex/Bin\n" +
+                "  format_rec [data_format,...],\n  fmtr\t\t\t\t: show/change display format for received data, comma separated list of type ASCII/UTF8/Dec/Hex/Bin\n" +
                 "  set <service_name> or <#>\t: set current service (for read/write operations)\n" +
                 "  read, r <name>**\t\t: read value from specific characteristic\n" +
                 "  write, w <name>**<value>\t: write value to specific characteristic\n" +
@@ -400,7 +416,7 @@ namespace BLEConsole
                 "  endif\t\t\t\t: end conditional block\n\n" +
                 "   * You can also use standard C language string formating characters like \\t, \\n etc. \n" +
                 "  ** <name> could be \"service/characteristic\", or just a char name or # (for selected service)\n\n" +
-                "  For additional information and examples please visit https://github.com/shelltechworks/BLEConsole \n"
+                "  For additional information and examples please visit https://github.com/sensboston/BLEConsole \n"
                 );
         }
 
@@ -469,35 +485,83 @@ namespace BLEConsole
             
         }
 
-        static void ChangeDisplayFormat(string param)
+        static void ChangeSendDataFormat(string param)
         {
             if (!string.IsNullOrEmpty(param))
             {
                 switch (param.ToLower())
                 {
                     case "ascii":
-                        _dataFormat = DataFormat.ASCII;
+                        _sendDataFormat = DataFormat.ASCII;
                         break;
                     case "utf8":
-                        _dataFormat = DataFormat.UTF8;
+                        _sendDataFormat = DataFormat.UTF8;
                         break;
                     case "dec":
                     case "decimal":
-                        _dataFormat = DataFormat.Dec;
+                        _sendDataFormat = DataFormat.Dec;
                         break;
                     case "bin":
                     case "binary":
-                        _dataFormat = DataFormat.Bin;
+                        _sendDataFormat = DataFormat.Bin;
                         break;
                     case "hex":
                     case "hexdecimal":
-                        _dataFormat = DataFormat.Hex;
+                        _sendDataFormat = DataFormat.Hex;
                         break;
                     default:
                         break;
                 }
             }
-            Console.WriteLine($"Current display format: {_dataFormat.ToString()}");
+            Console.WriteLine($"Current send data format: {_sendDataFormat.ToString()}");
+        }
+
+        static void ChangeReceivedDataFormat(string param)
+        {
+            if (!string.IsNullOrEmpty(param))
+            {
+                _receivedDataFormat.Clear();
+                var sendDataFormatSplit = param.ToLower().Replace(" ", "").Split(',');
+                for(int dataFormat = 0; dataFormat<sendDataFormatSplit.Length; dataFormat++) {
+                    String sendDataFormat = sendDataFormatSplit[dataFormat].ToLower();
+
+                    switch (sendDataFormat)
+                    {
+                        case "ascii":
+                            _receivedDataFormat.Add(DataFormat.ASCII);
+                            break;
+                        case "utf8":
+                            _receivedDataFormat.Add(DataFormat.UTF8);
+                            break;
+                        case "dec":
+                        case "decimal":
+                            _receivedDataFormat.Add(DataFormat.Dec);
+                            break;
+                        case "bin":
+                        case "binary":
+                            _receivedDataFormat.Add(DataFormat.Bin);
+                            break;
+                        case "hex":
+                        case "hexadecimal":
+                            _receivedDataFormat.Add(DataFormat.Hex);
+                            break;
+                        default:
+                            break;
+                    } 
+                }
+            }
+            Console.Write($"Current received data format: ");
+            for(int dataFormat = 0; dataFormat < _receivedDataFormat.Count; dataFormat++)
+            {
+                if(dataFormat == _receivedDataFormat.Count-1)
+                {
+                    Console.WriteLine($"{_receivedDataFormat[dataFormat]}");
+                }
+                else
+                {
+                    Console.Write($"{_receivedDataFormat[dataFormat]}, ");
+                }
+            }
         }
 
         static void Delay(string param)
@@ -531,15 +595,32 @@ namespace BLEConsole
         /// <param name="param">optional, 'w' means "wide list"</param>
         static void ListDevices(string param)
         {
+            var orderedDevices = _deviceList.OrderBy(d => d.Name);
+            const int bdAddressLength = 17;
+            String noAdvertisingName = "no_advertising_name";
+
             
-            var names = _deviceList.OrderBy(d => d.Name).Where(d => !string.IsNullOrEmpty(d.Name)).Select(d => d.Name).ToList();
             if (string.IsNullOrEmpty(param))
             {
-                for (int i = 0; i < names.Count(); i++)
-                    Console.WriteLine($"#{i:00}: {names[i]}");
+                var orderedDevicesList = orderedDevices.ToList();
+                string deviceName = "";
+                string deviceId = "";
+
+                Console.WriteLine("#    Address           Name");
+                for (int i = 0; i < orderedDevicesList.Count(); i++)
+                {
+                    deviceName = orderedDevicesList[i].Name ?? "";
+                    deviceName = deviceName == "" ? noAdvertisingName : deviceName;
+                    deviceId = orderedDevicesList[i].Id ?? "";
+                    deviceId = deviceId.Substring(Math.Max(0, deviceId.Length - bdAddressLength));
+                    Console.WriteLine($"#{i:00}: {deviceId} {deviceName}");
+                }
             }
             else if (param.Replace("/","").ToLower().Equals("w"))
             {
+                var names = orderedDevices.Select(d => d.Name == "" ? noAdvertisingName : d.Name).ToList();
+                var ids = orderedDevices.Select(d => d.Id.Substring(Math.Max(0, d.Id.Length-bdAddressLength))).ToList();
+
                 if (names.Count > 0)
                 {
                     // New formatting algorithm for "wide" output; we should avoid tabulations and use spaces only
@@ -550,7 +631,7 @@ namespace BLEConsole
                     for (int i = 0; i < names.Count; i++)
                     {
                         if (strColumn[i % columns] == null) strColumn[i % columns] = new List<string>();
-                        strColumn[i % columns].Add(string.Format("#{0:00}: {1}   ", i, names[i]));
+                            strColumn[i % columns].Add($"#{i}: {ids[i]} {names[i]}   ");
                     }
 
                     int maxNumColumns = Math.Min(columns, strColumn.Count(l => l != null));
@@ -630,7 +711,8 @@ namespace BLEConsole
             int retVal = 0;
             if (!string.IsNullOrEmpty(deviceName))
             {
-                var devs = _deviceList.OrderBy(d => d.Name).Where(d => !string.IsNullOrEmpty(d.Name)).ToList();
+                //var devs = _deviceList.OrderBy(d => d.Name).Where(d => !string.IsNullOrEmpty(d.Name)).ToList();
+                var devs = _deviceList.OrderBy(d => d.Name).ToList();
                 string foundId = Utilities.GetIdByNameOrNumber(devs, deviceName);
 
                 // If device is found, connect to device and enumerate all services
@@ -885,7 +967,7 @@ namespace BLEConsole
                             GattReadResult result = await attr.characteristic.ReadValueAsync(BluetoothCacheMode.Uncached);
 
                             if (result.Status == GattCommunicationStatus.Success)
-                                Console.WriteLine(Utilities.FormatValue(result.Value, _dataFormat));
+                                Console.WriteLine($"Read {result.Value.Length} bytes.\n{Utilities.FormatValueMultipleFormattes(result.Value, _receivedDataFormat)}");
                             else
                             {
                                 Console.WriteLine($"Read failed: {result.Status} {Utilities.FormatProtocolError(result.ProtocolError)}");
@@ -957,7 +1039,7 @@ namespace BLEConsole
                         retVal += 1;
                         return retVal;
                     }
-                    var buffer = Utilities.FormatData(data, _dataFormat);
+                    var buffer = Utilities.FormatData(data, _sendDataFormat);
                     if (buffer != null)
                     {
                         // Now process service/characteristic names
@@ -1244,19 +1326,15 @@ namespace BLEConsole
         /// <param name="args"></param>
         static void Characteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
         {
-            if (_primed)
-            {
-                var newValue = Utilities.FormatValue(args.CharacteristicValue, _dataFormat);
+            var newValue = Utilities.FormatValueMultipleFormattes(args.CharacteristicValue, _receivedDataFormat);
 
-                if (Console.IsInputRedirected) Console.Write($"{newValue}");
-                else Console.Write($"Value changed for {sender.Uuid}: {newValue}\nBLE: ");
-                if (_notifyCompleteEvent != null)
-                {
-                    _notifyCompleteEvent.Set();
-                    _notifyCompleteEvent = null;
-                }
+            if (Console.IsInputRedirected) Console.Write($"{newValue}");
+            else Console.Write($"Value changed for {sender.Uuid} ({args.CharacteristicValue.Length} bytes):\n{newValue}\nBLE: ");
+            if (_notifyCompleteEvent != null)
+            {
+                _notifyCompleteEvent.Set();
+                _notifyCompleteEvent = null;
             }
-            else  _primed = true; 
         }
 
         static DeviceInformation FindKnownDevice(string deviceId)
