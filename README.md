@@ -1,3 +1,5 @@
+
+
 # BLEConsole
 Windows command-line tool for interacting with Bluetooth LE devices
 
@@ -51,23 +53,39 @@ Windows 10, BT 4.0 adapter
 **BLEConsole.exe < cmd.txt**, where is cmd.txt is a simple text file with content:
 
 ```
+// Loop for each device
 foreach 
+
+	// Connect and if successfull
 	if open $
+		
+		//Read first characteristic of first service
 		read #0/#0
+		
+		// Close connection to device
 		close
 	endif
+	
 endfor
 ```
 
+ - Blank/empty lines are ignored. 
+ - Comments can be added by preceding them with `//`
+
 ### Below is an example of interactive use of the BLEConsole:
 
-You can use BT name or # provided by **list** command. For example, run BLEConsole, type **ls** and it should list available BT devices, like
+You can use BT name or # or address provided by **list** command. 
+For example, run BLEConsole, type **ls** and it should list available BT devices, like
 ```
 BLE: ls
-#00: F2
-#01: TOZO-S2
+#    Address           Name
+#00: 85:41:35:3f:d6:8a TOZO-S2
+#01: 65:b3:6e:8d:ba:f4 F2
+#02: e4:98:bb:5f:80:53 LEDnetWF02004100000
 ```
-Than use command **open #1** or **open TOZO-S2** (you can also use partial name, like TOZ if no more BLE devices with tat name exist), you'll get an output like
+*Note: The list consists of devices that Windows has seen in the past time. Not all devices may be available at this moment.*
+
+Than use command **open #1** or **open TOZO-S2** or **open 85:41:35:3f:d6:8a** to connect to the device. (you can also use partial name, like TOZ if no more BLE devices with that name exist)
 ```
 BLE: open #1
 Connecting to TOZO-S2.
@@ -77,7 +95,8 @@ Found 3 services:
 #02: 2800
 ```
 
-Now you can set active service and list characteristics, by issuing command **set #0** 
+The open command will automatically list the available services on the device.
+Now you can set active service and list it's characteristics, by issuing command **set #0** 
 ```
 BLE: set #0
 Selected service GenericAccess.
@@ -86,12 +105,31 @@ Selected service GenericAccess.
 #02: PeripheralPreferredConnectionParameters    R
 #03: 10918      R
 ```
+Now you can read or write characteristics of the active service.
 
-Now you can read characteristic by # or name, like **read #0**
+Read a characteristic by # or name, like **read #0**
 ```
 BLE: read #0
 TOZO-S2
 ```
 
+Write a characteristic by # or name, like **write #0 *value***
+```
+BLE: write #0 123
+```
 If you already knew your service name/#, you can avoid previous step and read characteristic after successful  connection to BLE device, like **read #1/#0**
+
+Data will be interpreted in the selected **format** Here we select hexadecimal as the format for both sending and receiving.
+```
+BLE: format hex
+Current send data format: Hex
+Current received data format: Hex
+```
+
+You can also directly write a value to a known service/characteristic.
+For example here we write an (hexadecimal) array of data to  service (0xFFFF) / characteristic (0xFF01)
+```
+BLE: write 0xFFFF/0xFF01 00 04 80 00 00 0d 0e 0b 3b 23 00 00 00 00
+```
+
 
