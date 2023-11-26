@@ -154,13 +154,26 @@ namespace BLEConsole
                     // Otherwise read the stdin
                     else userInput = Console.ReadLine();
 
-                    // Check for the end of input
-                    if (Console.IsInputRedirected && string.IsNullOrEmpty(userInput))
+                    // Check if we are processing script file
+                    if (Console.IsInputRedirected)
                     {
-                        _doWork = false;
+                        if (userInput == null)
+                        {
+                            //End of file, quit processing
+                            _doWork = false;
+                        }
+                        else if(userInput.TrimStart().StartsWith("//"))
+                        {
+							//Ignore input if commented (//) line
+							userInput = string.Empty;
+						}
+					}
+                    else
+                    {
+                        //Sanitize user typed input
+                        userInput = userInput?.TrimStart(new char[] { ' ', '\t' });
                     }
-                    else userInput = userInput?.TrimStart(new char[] { ' ', '\t' });
-
+                                        
                     if (!string.IsNullOrEmpty(userInput))
                     {
                         string[] strs = userInput.Split(' ');
