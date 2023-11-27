@@ -1,8 +1,13 @@
-This project may not compile right out of the box. I got:
+This project may not compile right out of the box. 
+It depends on the Windows SDK, you can install this using "Visual Studio Installer" by clicking modify and selecting the "Windows SDK" component.
+
+The following error indicates the Windows SDK is missing:
 "Error	CS0234	The type or namespace name 'Devices' does not exist in the namespace 'Windows' (are you missing an assembly reference?)"
 
-Apparently the following line of BLEConsole.csproj needed an update:
+If you installed the Windows SDK you might need to correct the version in te path.
+
+The following line of BLEConsole.csproj needs an update:
   <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd</HintPath>
 
 The path must be corrected for the development machine's Windows Kit install. In my case:
-  <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.17763.0\Windows.winmd</HintPath>
+  <HintPath>C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.22621.0\Windows.winmd</HintPath>
