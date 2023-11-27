@@ -3,7 +3,7 @@ Windows command-line tool for interacting with Bluetooth LE devices
 
 ![alt text](https://raw.githubusercontent.com/sensboston/BLEConsole/master/BLEConsole/BLEConsole.png)
 
-## [Install via ClickOnce](http://senssoft.com/BLEConsole/BLEConsole.application)
+## [Install via ClickOnce](https://senssoft.com/BLEConsole/BLEConsole.application)
 
 ### Requirements:
 
