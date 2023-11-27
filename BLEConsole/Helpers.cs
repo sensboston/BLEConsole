@@ -116,7 +116,7 @@ namespace BLEConsole
                                 return "Custom Characteristic: " + characteristic.Uuid;
                             }
                         }
-                        break;
+
                     default:
                         break;
                 }
