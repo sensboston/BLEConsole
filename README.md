@@ -3,9 +3,11 @@
 # BLEConsole
 Windows command-line tool for interacting with Bluetooth LE devices
 
-![alt text](https://raw.githubusercontent.com/sensboston/BLEConsole/master/BLEConsole/BLEConsole.png)
+[Screenshot](./BLEConsole/BLEConsole.png)
 
-## [Install via ClickOnce](https://senssoft.com/BLEConsole/BLEConsole.application)
+<!-- ## [Install via ClickOnce](https://senssoft.com/BLEConsole/BLEConsole.application) -->
+This is a fork of https://raw.githubusercontent.com/sensboston/BLEConsole/master/BLEConsole/
+to which I added/modified the **pair** and **unpair** commands.
 
 ### Requirements:
 
@@ -13,34 +15,42 @@ Windows 10, BT 4.0 adapter
 
 ### Console commands:
 
-- **help**, **?**                      : show help information
-- **quit**, **q**                      : quit from application
-- **list**, **ls** [w]                 : show available BLE devices
-- **open** <name> or <#>           : connect to BLE device
-- **timeout** <sec>                    : show/change connection timeout, default value is 3 sec
-- **delay** <msec>                 : pause execution for a certain number of milliseconds
-- **close**                        : disconnect from currently connected device
-- **stat**, **st**                     : shows current BLE device status
-- **print**, **p** <text&vars>*     : prints text and variables to stdout, where are variables are:
-	* %id : BlueTooth device ID
-	* %addr : device BT address
-	* %mac : device MAC address
-	* %name : device BlueTooth name
-	* %stat : device connection status
-	* %NOW, %now, %HH, %hh, %mm, %ss, %D, %d, %T, %t, %z : date/time variables
-- **format** [data_format], **fmt**    : show/change display format, can be ASCII/UTF8/Dec/Hex/Bin
-- **set** <service_name> or <#>    : set current service (for read/write operations)
-- **read**, **r** <name>**              : read value from specific characteristic
-- **write**, **w** <name>** <value>     : write value to specific characteristic
-- **subs** <name>**                 : subscribe to value change for specific characteristic
-- **unsubs** <name>** [all]         : unsubscribe from value change for specific characteristic or unsubs all for all
-- **wait** : wait <timeout> seconds for notification event on value change (you must be subscribed, see above)
-- **foreach** [device_mask]        : starts devices enumerating loop
-- **endfor**                       : end foreach loop<br/>
-- **if** <cmd> <params>            : start conditional block dependent on function returning w/o error
-     - **elif**                      : another conditionals block
-     - **else**                      : if condition == false block
-- **endif**			   : end conditional block
+- **help**, **?**: show help information
+- **quit**, **q**: quit from application
+- **list**, **ls** `[w]`: show available BLE devices
+- **open** <name> or <#>: connect to BLE device
+- **timeout** <sec>: show/change connection timeout, default value is 3 sec
+- **delay** <msec>: pause execution for a certain number of milliseconds
+- **close**: disconnect from currently connected device
+- **stat**, **st**: shows current BLE device status
+- **print**, **p** `<text&vars>`*: prints text and variables to stdout, where are variables are:
+	* `%id` : BlueTooth device ID
+	* `%addr` : device BT address
+	* `%mac` : device MAC address
+	* `%name` : device BlueTooth name
+	* `%stat` : device connection status
+	* `%NOW, %now, %HH, %hh, %mm, %ss, %D, %d, %T, %t, %z` : date/time variables
+- **format**, **fmt** `[data_format]`: show/change display format, can be ASCII/UTF8/Dec/Hex/Bin
+- **set** `<service_name>` or `<#>`: set current service (for read/write operations)
+- **read**, **r** `<name>`**: read value from specific characteristic
+- **write**, **w** `<name>`** `<value>`: write value to specific characteristic
+- **pair** `[<mode> [<params>]]`: pair the currently connected BLE device
+   * no mode: just pair
+   * mode=ProvidePin `<pin>`: pair with supplied pin
+   * mode=ConfirmOnly: pair and confirm
+   * mode=ConfirmPinMatch: pair and confirm that pin matches
+   * mode=DisplayPin: pair and confirm that displayed pin matches
+   * mode=ProvidePasswordCredential `<username> <password>`: pair with supplied username and password
+- **unpair**: unpair currently connected BLE device
+- **subs** `<name>`**: subscribe to value change for specific characteristic
+- **unsubs** `<name>`** `[all]`: unsubscribe from value change for specific characteristic or unsubs all for all
+- **wait** `<timeout>`: wait `<timeout>` seconds for notification event on value change (you must be subscribed, see above)
+- **foreach** `[device_mask]`: starts devices enumerating loop
+- **endfor**: end foreach loop<br/>
+- **if** <cmd> <params>: start conditional block dependent on function returning w/o error
+     - **elif**: another conditionals block
+     - **else**: if condition == false block
+- **endif**: end conditional block
 	
   _* you can also use standard C language string formating characters like \\t, \\n etc._
   
