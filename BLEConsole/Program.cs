@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
-using System.Reflection;
-using System.Threading;
-using System.Text.RegularExpressions;
-using System.Diagnostics.Eventing.Reader;
+using Windows.Devices.Enumeration;
+using Windows.Security.Credentials;
 
 namespace BLEConsole
 {
@@ -32,6 +32,11 @@ namespace BLEConsole
 
         // Only one registered characteristic at a time.
         static List<GattCharacteristic> _subscribers = new List<GattCharacteristic>();
+
+        // Pairing information and pin
+        static readonly Dictionary<string, bool> _pairings = new Dictionary<string, bool>();
+        static string _pair_pin = null;
+        private static PasswordCredential _pair_pass_cred;
 
         // Current received data format
         static DataFormat _sendDataFormat = DataFormat.UTF8;
@@ -110,7 +115,11 @@ namespace BLEConsole
             {
                 if (_deviceList.FirstOrDefault(d => d.Id.Equals(devInfo.Id) || d.Name.Equals(devInfo.Name)) == null) _deviceList.Add(devInfo);
             };
-            watcher.Updated += (_, __) => {}; // We need handler for this event, even an empty!
+            watcher.Updated += (DeviceWatcher sender, DeviceInformationUpdate diu) =>
+            {
+                _deviceList.FirstOrDefault(d => d.Id.Equals(diu.Id))?.Update(diu);
+            };
+
             //Watch for a device being removed by the watcher
             //watcher.Removed += (DeviceWatcher sender, DeviceInformationUpdate devInfo) =>
             //{
@@ -130,7 +139,7 @@ namespace BLEConsole
                     Console.Write("BLE: ");
 
                 skipPrompt = false;
-              
+
                 try
                 {
                     var userInput = string.Empty;
@@ -142,7 +151,7 @@ namespace BLEConsole
                         if (_forEachCmdCounter++ >= _forEachCommands.Count - 1)
                         {
                             _forEachCmdCounter = 0;
-                            if (_forEachDeviceCounter++ > _forEachDeviceNames.Count-1)
+                            if (_forEachDeviceCounter++ > _forEachDeviceNames.Count - 1)
                             {
                                 _forEachExecution = false;
                                 _forEachCommands.Clear();
@@ -162,18 +171,18 @@ namespace BLEConsole
                             //End of file, quit processing
                             _doWork = false;
                         }
-                        else if(userInput.TrimStart().StartsWith("//"))
+                        else if (userInput.TrimStart().StartsWith("//"))
                         {
-							//Ignore input if commented (//) line
-							userInput = string.Empty;
-						}
-					}
+                            //Ignore input if commented (//) line
+                            userInput = string.Empty;
+                        }
+                    }
                     else
                     {
                         //Sanitize user typed input
                         userInput = userInput?.TrimStart(new char[] { ' ', '\t' });
                     }
-                                        
+
                     if (!string.IsNullOrEmpty(userInput))
                     {
                         string[] strs = userInput.Split(' ');
@@ -212,6 +221,8 @@ namespace BLEConsole
             watcher.Stop();
         }
 
+
+
         static async Task HandleSwitch(string cmd, string parameters)
         {
             switch (cmd)
@@ -219,11 +230,11 @@ namespace BLEConsole
                 case "if":
                     _inIfBlock++;
                     _exitCode = 0;
-                    if(parameters != "")
+                    if (parameters != "")
                     {
                         string[] str = parameters.Split(' ');
                         await HandleSwitch(str[0], str.Skip(1).Aggregate((i, j) => i + " " + j));
-                        _closingIfBlock = ( _exitCode > 0 );
+                        _closingIfBlock = (_exitCode > 0);
                         _failedConditional = _closingIfBlock;
                     }
                     break;
@@ -259,7 +270,7 @@ namespace BLEConsole
                     break;
 
                 case "endif":
-                    if(_inIfBlock > 0)
+                    if (_inIfBlock > 0)
                         _inIfBlock--;
                     _failedConditional = false;
                     break;
@@ -273,7 +284,7 @@ namespace BLEConsole
                     if (string.IsNullOrEmpty(_forEachDeviceMask))
                         _forEachDeviceNames = _deviceList.OrderBy(d => d.Name).Where(d => !string.IsNullOrEmpty(d.Name)).Select(d => d.Name).ToList();
                     else
-                    _forEachDeviceNames = _deviceList.OrderBy(d => d.Name).Where(d => d.Name.ToLower().StartsWith(_forEachDeviceMask)).Select(d => d.Name).ToList();
+                        _forEachDeviceNames = _deviceList.OrderBy(d => d.Name).Where(d => d.Name.ToLower().StartsWith(_forEachDeviceMask)).Select(d => d.Name).ToList();
                     _forEachDeviceCounter = 0;
                     _forEachCmdCounter = 0;
                     _forEachCollection = false;
@@ -318,7 +329,7 @@ namespace BLEConsole
                 case "open":
                     if (_forEachExecution && _forEachDeviceCounter > 0)
                         parameters = parameters.Replace("$", _forEachDeviceNames[_forEachDeviceCounter - 1]);
-                    
+
                     _exitCode += await OpenDevice(parameters);
                     break;
 
@@ -380,9 +391,13 @@ namespace BLEConsole
                     Unsubscribe(parameters);
                     break;
 
-                    //experimental pairing function 
+                //experimental pairing function 
                 case "pair":
-                    PairBluetooth(parameters);
+                    _exitCode += await PairBluetooth(parameters);
+                    break;
+
+                case "unpair":
+                    _exitCode += await UnPairBluetooth(parameters);
                     break;
 
                 default:
@@ -397,8 +412,8 @@ namespace BLEConsole
         static void Help()
         {
             Console.WriteLine(_versionInfo +
-                "\n  help, ?\t\t\t: show help information\n"+
-                "  quit, q\t\t\t: quit from application\n"+
+                "\n  help, ?\t\t\t: show help information\n" +
+                "  quit, q\t\t\t: quit from application\n" +
                 "  list, ls [w]\t\t\t: show available BLE devices\n" +
                 "  open <name>, <#> or <address>\t: connect to BLE device\n" +
                 "  delay <msec>\t\t\t: pause execution for a certain number of milliseconds\n" +
@@ -418,11 +433,20 @@ namespace BLEConsole
                 "  set <service_name> or <#>\t: set current service (for read/write operations)\n" +
                 "  read, r <name>**\t\t: read value from specific characteristic\n" +
                 "  write, w <name>**<value>\t: write value to specific characteristic\n" +
+                "  pair [<mode> [<params>]]\t: pair the currently connected BLE device\n" +
+                "  \t\t\t\t: no mode               just pair\n" +
+                "  \t\t\t\t: mode=ProvidePin <pin> pair with supplied pin \n" +
+                "  \t\t\t\t: mode=ConfirmOnly      pair and confirm\n" +
+                "  \t\t\t\t: mode=ConfirmPinMatch  pair and confirm that pin matches\n" +
+                "  \t\t\t\t: mode=DisplayPin       pair and confirm that displayed pin matches\n" +
+                "  \t\t\t\t: mode=ProvidePasswordCredential <username> <password>\n" +
+                "  \t\t\t\t                        pair with supplied username and password\n" +
+                "  unpair \t\t\t: unpair currently connected BLE device\n" +
                 "  subs <name>**\t\t\t: subscribe to value change for specific characteristic\n" +
                 "  unsubs <name>** [all]\t\t: unsubscribe from value change for specific characteristic or unsubs all for all\n" +
                 "  wait\t\t\t\t: wait for notification event on value change (you must be subscribed, see above)\n" +
                 "  foreach [device_mask]\t\t: starts devices enumerating loop\n" +
-                "  endfor\t\t\t: end foreach loop\n"+
+                "  endfor\t\t\t: end foreach loop\n" +
                 "  if <cmd> <params>\t\t: start conditional block dependent on function returning w\\o error\n" +
                 "    elif\t\t\t: another conditionals block\n" +
                 "    else\t\t\t: if condition == false block\n" +
@@ -482,20 +506,168 @@ namespace BLEConsole
                     Console.Write(param + CLRF);
                 }
             }
-        
+
             return retVal;
         }
 
-        static async void PairBluetooth(string param)
+        //
+        // Seems like the pairing information are not updated in
+        // BluetoothLEDevice.DeviceInformation.Pairing
+        // once you pair or unpair
+        // So we need to keep track of it ourselves
+        //        
+        static bool IsPaired(BluetoothLEDevice device) =>
+            _pairings.ContainsKey(_selectedDevice.DeviceId)
+                ? _pairings[_selectedDevice.DeviceId]
+                : device.DeviceInformation.Pairing.IsPaired;
+
+        static void SetPairingCache(BluetoothLEDevice device, bool isPaired) =>
+            _pairings[device.DeviceId] = isPaired;
+
+        static async Task<int> UnPairBluetooth(string param)
         {
-            DevicePairingResult result = null;
-            DeviceInformationPairing pairingInformation = _selectedDevice.DeviceInformation.Pairing;
+            if (_selectedDevice == null)
+            {
+                if (!Console.IsOutputRedirected)
+                {
+                    Console.WriteLine("Nothing to unpair, no BLE device connected.");
+                }
+                return 1;
+            }
 
-            await _selectedDevice.DeviceInformation.Pairing.UnpairAsync();
+            if (IsPaired(_selectedDevice))
+            {
+                var dur = await _selectedDevice.DeviceInformation.Pairing.UnpairAsync();
+                if (dur.Status == DeviceUnpairingResultStatus.Unpaired)
+                {
+                    Console.WriteLine("Unpaired device");
+                    SetPairingCache(_selectedDevice, false);
+                }
+                else
+                {
+                    Console.WriteLine($"Unable to unpair device:{dur.Status}");
+                    return 1;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Device is NOT paired");
+            }
+            return 0;
+        }
 
-            if (pairingInformation.CanPair)
-                result =  await _selectedDevice.DeviceInformation.Pairing.PairAsync(pairingInformation.ProtectionLevel);
-            
+        static async Task<int> PairBluetooth(string param)
+        {
+            if (_selectedDevice == null)
+            {
+                if (!Console.IsOutputRedirected)
+                {
+                    Console.WriteLine("Nothing to pair, no BLE device connected.");
+                }
+                return 1;
+            }
+
+            if (IsPaired(_selectedDevice))
+            {
+                Console.WriteLine("Device is already paired");
+                return 0;
+            }
+            if (!_selectedDevice.DeviceInformation.Pairing.CanPair)
+            {
+                Console.WriteLine("Device cannot be paired");
+                return 1;
+            }
+
+            var pms = param.Split(' ');
+            DevicePairingKinds? dpk = null;
+
+            // pair pin 123456
+            if (pms.Length == 2 && (pms[0] == "pin" || pms[0].Equals("ProvidePin", StringComparison.OrdinalIgnoreCase)))
+            {
+                _pair_pin = pms[1];
+                dpk = DevicePairingKinds.ProvidePin;
+            }
+            // pair ConfirmOnly
+            else if (pms.Length == 1 && pms[0].Equals("ConfirmOnly", StringComparison.OrdinalIgnoreCase))
+            {
+                // TODO: Not tested!
+                dpk = DevicePairingKinds.ConfirmOnly;
+            }
+            // pair ConfirmPinMatch
+            else if (pms.Length == 1 && pms[0].Equals("ConfirmPinMatch", StringComparison.OrdinalIgnoreCase))
+            {
+                // TODO: Not tested!
+                dpk = DevicePairingKinds.ConfirmPinMatch;
+            }
+            // pair DisplayPin
+            else if (pms.Length == 1 && pms[0].Equals("DisplayPin", StringComparison.OrdinalIgnoreCase))
+            {
+                // TODO: Not tested!
+                dpk = DevicePairingKinds.DisplayPin;
+            }
+            // pair ProvidePasswordCredential user pass
+            else if (pms.Length == 3 && pms[0].Equals("ProvidePasswordCredential", StringComparison.OrdinalIgnoreCase))
+            {
+                // TODO: Not tested!
+                _pair_pass_cred = new PasswordCredential()
+                {
+                    UserName = pms[1],
+                    Password = pms[2],
+                };
+                dpk = DevicePairingKinds.ProvidePasswordCredential;
+            }
+            else if (pms.Length == 0)
+            {
+                // just plain pairing
+            }
+            else
+            {
+                Console.WriteLine("Invalid parameters.  Please see see the help");
+                return 1;
+            }
+
+            DevicePairingResult dur;
+            if (dpk != null)
+            {
+                _selectedDevice.DeviceInformation.Pairing.Custom.PairingRequested += Custom_PairingRequested;
+                dur = await _selectedDevice.DeviceInformation.Pairing.Custom.PairAsync((DevicePairingKinds)dpk);
+                _pair_pin = null;
+                _pair_pass_cred = null;
+                _selectedDevice.DeviceInformation.Pairing.Custom.PairingRequested -= Custom_PairingRequested;
+            }
+            else
+            {
+                dur = await _selectedDevice.DeviceInformation.Pairing.PairAsync();
+            }
+
+            if (dur.Status == DevicePairingResultStatus.Paired)
+            {
+                SetPairingCache(_selectedDevice, true);
+                Console.WriteLine("Paired device");
+            }
+            else
+            {
+                SetPairingCache(_selectedDevice, false);
+                Console.WriteLine($"Unable to pair device:{dur.Status}");
+            }
+
+            return dur.Status == DevicePairingResultStatus.Paired ? 0 : 1;
+        }
+
+        private static void Custom_PairingRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
+        {
+            if (_pair_pass_cred != null)
+            {
+                args.AcceptWithPasswordCredential(_pair_pass_cred);
+            }
+            else if (_pair_pin != null)
+            {
+                args.Accept(_pair_pin);
+            }
+            else
+            {
+                args.Accept();
+            }
         }
 
         static void ChangeSendDataFormat(string param)
@@ -535,7 +707,8 @@ namespace BLEConsole
             {
                 _receivedDataFormat.Clear();
                 var sendDataFormatSplit = param.ToLower().Replace(" ", "").Split(',');
-                for(int dataFormat = 0; dataFormat<sendDataFormatSplit.Length; dataFormat++) {
+                for (int dataFormat = 0; dataFormat < sendDataFormatSplit.Length; dataFormat++)
+                {
                     String sendDataFormat = sendDataFormatSplit[dataFormat].ToLower();
 
                     switch (sendDataFormat)
@@ -560,13 +733,13 @@ namespace BLEConsole
                             break;
                         default:
                             break;
-                    } 
+                    }
                 }
             }
             Console.Write($"Current received data format: ");
-            for(int dataFormat = 0; dataFormat < _receivedDataFormat.Count; dataFormat++)
+            for (int dataFormat = 0; dataFormat < _receivedDataFormat.Count; dataFormat++)
             {
-                if(dataFormat == _receivedDataFormat.Count-1)
+                if (dataFormat == _receivedDataFormat.Count - 1)
                 {
                     Console.WriteLine($"{_receivedDataFormat[dataFormat]}");
                 }
@@ -579,7 +752,7 @@ namespace BLEConsole
 
         static void Delay(string param)
         {
-            uint milliseconds = (uint) _timeout.TotalMilliseconds;
+            uint milliseconds = (uint)_timeout.TotalMilliseconds;
             uint.TryParse(param, out milliseconds);
             _delayEvent = new ManualResetEvent(false);
             _delayEvent.WaitOne((int)milliseconds, true);
@@ -612,7 +785,7 @@ namespace BLEConsole
             const int bdAddressLength = 17;
             String noAdvertisingName = "no_advertising_name";
 
-            
+
             if (string.IsNullOrEmpty(param))
             {
                 var orderedDevicesList = orderedDevices.ToList();
@@ -629,10 +802,10 @@ namespace BLEConsole
                     Console.WriteLine($"#{i:00}: {deviceId} {deviceName}");
                 }
             }
-            else if (param.Replace("/","").ToLower().Equals("w"))
+            else if (param.Replace("/", "").ToLower().Equals("w"))
             {
                 var names = orderedDevices.Select(d => d.Name == "" ? noAdvertisingName : d.Name).ToList();
-                var ids = orderedDevices.Select(d => d.Id.Substring(Math.Max(0, d.Id.Length-bdAddressLength))).ToList();
+                var ids = orderedDevices.Select(d => d.Id.Substring(Math.Max(0, d.Id.Length - bdAddressLength))).ToList();
 
                 if (names.Count > 0)
                 {
@@ -644,7 +817,7 @@ namespace BLEConsole
                     for (int i = 0; i < names.Count; i++)
                     {
                         if (strColumn[i % columns] == null) strColumn[i % columns] = new List<string>();
-                            strColumn[i % columns].Add($"#{i}: {ids[i]} {names[i]}   ");
+                        strColumn[i % columns].Add($"#{i}: {ids[i]} {names[i]}   ");
                     }
 
                     int maxNumColumns = Math.Min(columns, strColumn.Count(l => l != null));
@@ -684,7 +857,8 @@ namespace BLEConsole
                 }
                 else
                 {
-                    Console.WriteLine($"Device {_selectedDevice.Name} is connected.");
+                    Console.WriteLine($"Device {_selectedDevice.Name} is connected" +
+                        (IsPaired(_selectedDevice) ? " and is paired" : ", but is NOT paired"));
                     if (_services.Count() > 0)
                     {
                         // List all services
@@ -738,12 +912,15 @@ namespace BLEConsole
                     try
                     {
                         // only allow for one connection to be open at a time
-                        if (_selectedDevice != null) 
+                        if (_selectedDevice != null)
                             CloseDevice();
-                        
+
                         _selectedDevice = await BluetoothLEDevice.FromIdAsync(foundId).AsTask().TimeoutAfter(_timeout);
                         if (!Console.IsInputRedirected)
-                            Console.WriteLine($"Connecting to {_selectedDevice.Name}.");
+                        {
+                            Console.WriteLine($"Connecting to {_selectedDevice.Name}. " +
+                                (IsPaired(_selectedDevice) ? "It is paired" : "It is NOT paired"));
+                        }
 
                         var result = await _selectedDevice.GetGattServicesAsync(BluetoothCacheMode.Uncached);
                         if (result.Status == GattCommunicationStatus.Success)
@@ -962,7 +1139,7 @@ namespace BLEConsole
                     {
                         if (_selectedService == null)
                         {
-                            if(!Console.IsOutputRedirected)
+                            if (!Console.IsOutputRedirected)
                                 Console.WriteLine("No service is selected.");
                         }
                         chars = new List<BluetoothLEAttributeDisplay>(_characteristics);
@@ -1094,7 +1271,7 @@ namespace BLEConsole
                         {
                             if (_selectedService == null)
                             {
-                                if(!Console.IsOutputRedirected)
+                                if (!Console.IsOutputRedirected)
                                     Console.WriteLine("No service is selected.");
                                 retVal += 1;
                             }
@@ -1234,8 +1411,8 @@ namespace BLEConsole
                                 if (charDisplay.CanNotify)
                                 {
                                     status = await attr.characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
-                                } 
-                                else 
+                                }
+                                else
                                 {
                                     status = await attr.characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
                                 }
@@ -1245,7 +1422,7 @@ namespace BLEConsole
                                     attr.characteristic.ValueChanged += Characteristic_ValueChanged;
                                     if (!Console.IsOutputRedirected)
                                     {
-                                        if (charDisplay.CanNotify) 
+                                        if (charDisplay.CanNotify)
                                             Console.WriteLine($"Subscribed to characteristic {useName} (notify)");
                                         else
                                             Console.WriteLine($"Subscribed to characteristic {useName} (indicate)");
@@ -1354,7 +1531,7 @@ namespace BLEConsole
         {
             foreach (var device in _deviceList)
             {
-                if(device.Id == deviceId)
+                if (device.Id == deviceId)
                 {
                     return device;
                 }
