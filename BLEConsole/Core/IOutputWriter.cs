@@ -16,9 +16,29 @@ namespace BLEConsole.Core
     /// </summary>
     public class ConsoleOutputWriter : IOutputWriter
     {
-        public void Write(string message) => System.Console.Write(message);
-        public void WriteLine(string message) => System.Console.WriteLine(message);
-        public void WriteError(string message) => System.Console.Error.WriteLine(message);
         public bool IsRedirected => System.Console.IsOutputRedirected;
+
+        public void Write(string message)
+        {
+            if (!System.Console.IsOutputRedirected)
+                System.Console.Write(message);
+        }
+
+        public void WriteLine(string message)
+        {
+            if (!System.Console.IsOutputRedirected)
+                System.Console.WriteLine(message);
+        }
+
+        public void WriteError(string message)
+        {
+            if (!System.Console.IsOutputRedirected)
+            {
+                var oldColor = System.Console.ForegroundColor;
+                System.Console.ForegroundColor = System.ConsoleColor.Red;
+                System.Console.WriteLine(message);
+                System.Console.ForegroundColor = oldColor;
+            }
+        }
     }
 }
