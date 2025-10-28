@@ -16,6 +16,7 @@ to which I added/modified the **pair** and **unpair** commands.
 - **Descriptor Support**: Read and write GATT descriptors (e.g., CCCD for notifications)
 - **MTU Information**: Display current MTU size and effective payload
 - **Fast Writes**: WriteWithoutResponse support via `write -nr` flag
+- **Batch Read Operations**: New `read-all` command to read all characteristics in a service at once
 - **Device Info Helper**: Automatically read Device Information Service (DIS) characteristics
 - **Enhanced Properties Display**: Shows all 10 characteristic properties including WriteWithoutResponse, Broadcast, AuthenticatedSignedWrites, etc.
 - **Improved Error Reporting**: Better protocol error messages and status information
@@ -46,6 +47,7 @@ Windows 10, BT 4.0 adapter
 - **format**, **fmt** `[data_format]`: show/change display format, can be ASCII/UTF8/Dec/Hex/Bin
 - **set** `<service_name>` or `<#>`: set current service (for read/write operations)
 - **read**, **r** `<name>`**: read value from specific characteristic
+- **read-all**, **ra** `[service]`: read all characteristics in a service (batch operation)
 - **write**, **w** `<name>`** `<value>`: write value to specific characteristic
 - **write -nr** `<name>` `<value>`: write value using WriteWithoutResponse (faster, no ACK)
 - **desc** `<name>`: list all descriptors for a characteristic

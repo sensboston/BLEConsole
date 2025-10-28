@@ -107,6 +107,7 @@
     <Compile Include="Commands\DeviceCommands\StatCommand.cs" />
     <Compile Include="Commands\GattCommands\DescCommand.cs" />
     <Compile Include="Commands\GattCommands\MtuCommand.cs" />
+    <Compile Include="Commands\GattCommands\ReadAllCommand.cs" />
     <Compile Include="Commands\GattCommands\ReadCommand.cs" />
     <Compile Include="Commands\GattCommands\ReadDescCommand.cs" />
     <Compile Include="Commands\GattCommands\WriteCommand.cs" />

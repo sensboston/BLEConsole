@@ -28,6 +28,10 @@
 
 **New Commands:**
 - `desc <characteristic>` - List descriptors for a characteristic
+- `read-desc <char>/<desc>` (aliases: `rd`) - Read descriptor value
+- `write-desc <char>/<desc> <value>` (aliases: `wd`) - Write descriptor value
+- `read-all [service]` (aliases: `ra`) - Batch read all characteristics in a service
+- `device-info` (aliases: `di`, `info`) - Auto-read Device Information Service
 - `mtu` - Show current MTU (Maximum Transmission Unit) size
 - `write -nr <char> <value>` - Write without response (faster, no ACK)
 
@@ -61,10 +65,32 @@
 
 ### 📊 Statistics
 
-- **40+ files** in organized structure
-- **2000+ lines** of refactored code
-- **11 command classes** (with more to come)
+- **45+ files** in organized structure
+- **2500+ lines** of refactored code
+- **15 command classes** (5 utility/device, 7 GATT, 3 config)
 - **Zero breaking changes**
+
+### 🎁 Quick Win Bundle Features
+
+**Complete Descriptor Support:**
+- Read/write any GATT descriptor (not just CCCD)
+- Simple syntax: `read-desc Characteristic/Descriptor`
+- Supports lookup by name, number, or UUID
+
+**Device Information Helper:**
+- Automatically reads all DIS characteristics
+- Manufacturer, Model, Serial Number, Revisions, System ID, PnP ID
+- Formatted output with proper data types
+
+**Enhanced Properties Display:**
+- Extended from 4 to 10 property flags
+- Format: `RWwNIBAEra` (uppercase = common, lowercase = rare)
+- Shows all GATT characteristic properties
+
+**Batch Operations:**
+- `read-all` reads all characteristics in one command
+- Displays results in formatted table
+- Success/failure summary with error details
 
 ---
 
