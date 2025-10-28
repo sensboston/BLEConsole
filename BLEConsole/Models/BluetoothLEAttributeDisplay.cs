@@ -28,7 +28,26 @@ namespace BLEConsole.Models
             AttributeDisplayType = AttributeType.Characteristic;
         }
 
-        public string Chars => (CanRead ? "R" : " ") + (CanWrite ? "W" : " ") + (CanNotify ? "N" : " ") + (CanIndicate ? "I": " ");
+        public string Chars
+        {
+            get
+            {
+                if (characteristic == null) return "    ";
+
+                var props = characteristic.CharacteristicProperties;
+                return
+                    (props.HasFlag(GattCharacteristicProperties.Read) ? "R" : " ") +
+                    (props.HasFlag(GattCharacteristicProperties.Write) ? "W" : " ") +
+                    (props.HasFlag(GattCharacteristicProperties.WriteWithoutResponse) ? "w" : " ") +
+                    (props.HasFlag(GattCharacteristicProperties.Notify) ? "N" : " ") +
+                    (props.HasFlag(GattCharacteristicProperties.Indicate) ? "I" : " ") +
+                    (props.HasFlag(GattCharacteristicProperties.Broadcast) ? "B" : " ") +
+                    (props.HasFlag(GattCharacteristicProperties.AuthenticatedSignedWrites) ? "A" : " ") +
+                    (props.HasFlag(GattCharacteristicProperties.ExtendedProperties) ? "E" : " ") +
+                    (props.HasFlag(GattCharacteristicProperties.ReliableWrites) ? "r" : " ") +
+                    (props.HasFlag(GattCharacteristicProperties.WritableAuxiliaries) ? "a" : " ");
+            }
+        }
 
         public bool CanRead
         {
