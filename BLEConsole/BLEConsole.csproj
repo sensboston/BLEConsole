@@ -120,6 +120,7 @@
     <Compile Include="Commands\UtilityCommands\HelpCommand.cs" />
     <Compile Include="Commands\UtilityCommands\QuitCommand.cs" />
     <Compile Include="Core\BleContext.cs" />
+    <Compile Include="Core\ConsoleOutputWriter.cs" />
     <Compile Include="Core\IOutputWriter.cs" />
     <Compile Include="Enums\AttributeType.cs" />
     <Compile Include="Enums\DataFormat.cs" />
