@@ -99,6 +99,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\CommandRegistry.cs" />
+    <Compile Include="Commands\ConfigCommands\FormatCommand.cs" />
+    <Compile Include="Commands\DeviceCommands\ListCommand.cs" />
+    <Compile Include="Commands\DeviceCommands\StatCommand.cs" />
+    <Compile Include="Commands\UtilityCommands\HelpCommand.cs" />
+    <Compile Include="Commands\UtilityCommands\QuitCommand.cs" />
     <Compile Include="Core\BleContext.cs" />
     <Compile Include="Core\IOutputWriter.cs" />
     <Compile Include="Enums\AttributeType.cs" />
