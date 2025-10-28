@@ -128,8 +128,8 @@ namespace BLEConsole
             _output = new ConsoleOutputWriter();
             _commandRegistry = new CommandRegistry(_output);
 
-            // Utility commands
-            _commandRegistry.Register(new HelpCommand(_output));
+            // Utility commands - HelpCommand needs registry to show all commands
+            _commandRegistry.Register(new HelpCommand(_commandRegistry, _output));
             _commandRegistry.Register(new QuitCommand(_output));
 
             // Device commands
