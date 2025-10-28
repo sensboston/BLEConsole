@@ -35,31 +35,31 @@ namespace BLEConsole
     {
         // UUID Conversion
         public static ushort ConvertUuidToShortId(Guid uuid) =>
-            BLEConsole.Utilities.UuidConverter.ConvertUuidToShortId(uuid);
+            BLEConsole.Utils.UuidConverter.ConvertUuidToShortId(uuid);
 
         // Data formatting
         public static byte[] ReadBufferToBytes(IBuffer buffer) =>
-            BLEConsole.Utilities.DataFormatter.ReadBufferToBytes(buffer);
+            BLEConsole.Utils.DataFormatter.ReadBufferToBytes(buffer);
 
         public static string FormatValue(IBuffer buffer, DataFormat format) =>
-            BLEConsole.Utilities.DataFormatter.FormatValue(buffer, format);
+            BLEConsole.Utils.DataFormatter.FormatValue(buffer, format);
 
         public static string FormatValueMultipleFormattes(IBuffer buffer, List<DataFormat> formatList) =>
-            BLEConsole.Utilities.DataFormatter.FormatValueMultipleFormattes(buffer, formatList);
+            BLEConsole.Utils.DataFormatter.FormatValueMultipleFormattes(buffer, formatList);
 
         public static IBuffer FormatData(string data, DataFormat format) =>
-            BLEConsole.Utilities.DataFormatter.FormatData(data, format);
+            BLEConsole.Utils.DataFormatter.FormatData(data, format);
 
         // Device lookup
         public static bool CheckForValidBluetoothAddress(string name) =>
-            BLEConsole.Utilities.DeviceLookup.CheckForValidBluetoothAddress(name);
+            BLEConsole.Utils.DeviceLookup.CheckForValidBluetoothAddress(name);
 
         public static string GetIdByNameOrNumber(object collection, string name) =>
-            BLEConsole.Utilities.DeviceLookup.GetIdByNameOrNumber(collection, name);
+            BLEConsole.Utils.DeviceLookup.GetIdByNameOrNumber(collection, name);
 
         // Protocol error formatting
         public static string FormatProtocolError(byte? protocolError) =>
-            BLEConsole.Utilities.ProtocolErrorFormatter.FormatProtocolError(protocolError);
+            BLEConsole.Utils.ProtocolErrorFormatter.FormatProtocolError(protocolError);
     }
 
     /// <summary>
@@ -68,6 +68,6 @@ namespace BLEConsole
     public static class TaskExtensions
     {
         public static Task<TResult> TimeoutAfter<TResult>(this Task<TResult> task, TimeSpan timeout) =>
-            BLEConsole.Utilities.TaskExtensions.TimeoutAfter(task, timeout);
+            BLEConsole.Utils.TaskExtensions.TimeoutAfter(task, timeout);
     }
 }

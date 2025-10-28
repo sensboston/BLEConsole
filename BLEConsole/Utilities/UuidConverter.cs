@@ -1,6 +1,6 @@
 using System;
 
-namespace BLEConsole.Utilities
+namespace BLEConsole.Utils
 {
     public static class UuidConverter
     {

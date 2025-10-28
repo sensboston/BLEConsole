@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 
-namespace BLEConsole.Utilities
+namespace BLEConsole.Utils
 {
     public static class DataFormatter
     {

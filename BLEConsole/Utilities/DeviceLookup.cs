@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.Devices.Enumeration;
 
-namespace BLEConsole.Utilities
+namespace BLEConsole.Utils
 {
     public static class DeviceLookup
     {

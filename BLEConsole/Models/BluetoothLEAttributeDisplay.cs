@@ -1,6 +1,8 @@
 using System;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
+using BLEConsole.Enums;
+using BLEConsole.Utils;
 
 namespace BLEConsole.Models
 {
@@ -75,7 +77,7 @@ namespace BLEConsole.Models
                     case AttributeType.Service:
                         if (IsSigDefinedUuid(service.Uuid))
                         {
-                            ushort shortId = Utilities.UuidConverter.ConvertUuidToShortId(service.Uuid);
+                            ushort shortId = UuidConverter.ConvertUuidToShortId(service.Uuid);
                             string serviceName = Enum.GetName(typeof(Enums.GattNativeServiceUuid), shortId);
                             if (serviceName != null)
                             {
@@ -87,7 +89,7 @@ namespace BLEConsole.Models
                     case AttributeType.Characteristic:
                         if (IsSigDefinedUuid(characteristic.Uuid))
                         {
-                            ushort shortId = Utilities.UuidConverter.ConvertUuidToShortId(characteristic.Uuid);
+                            ushort shortId = UuidConverter.ConvertUuidToShortId(characteristic.Uuid);
                             string characteristicName = Enum.GetName(typeof(Enums.GattNativeCharacteristicUuid), shortId);
                             if (characteristicName != null)
                             {

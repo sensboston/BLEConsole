@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BLEConsole.Utilities
+namespace BLEConsole.Utils
 {
     public static class TaskExtensions
     {
