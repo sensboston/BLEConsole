@@ -99,9 +99,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\BleContext.cs" />
+    <Compile Include="Core\IOutputWriter.cs" />
+    <Compile Include="Enums\AttributeType.cs" />
+    <Compile Include="Enums\DataFormat.cs" />
+    <Compile Include="Enums\GattNativeCharacteristicUuid.cs" />
+    <Compile Include="Enums\GattNativeDescriptorUuid.cs" />
+    <Compile Include="Enums\GattNativeServiceUuid.cs" />
+    <Compile Include="Enums\ProtocolErrorCode.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Models\BluetoothLEAttributeDisplay.cs" />
+    <Compile Include="Models\BluetoothLEDeviceDisplay.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\DataFormatter.cs" />
+    <Compile Include="Utilities\DeviceLookup.cs" />
+    <Compile Include="Utilities\ProtocolErrorFormatter.cs" />
+    <Compile Include="Utilities\TaskExtensions.cs" />
+    <Compile Include="Utilities\UuidConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
