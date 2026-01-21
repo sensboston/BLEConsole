@@ -2,7 +2,7 @@
 
 Windows command-line tool for interacting with Bluetooth LE devices
 
-![Screenshot](./BLEConsole/BLEConsole.png)
+<img width="2650" height="2060" alt="image" src="https://github.com/user-attachments/assets/0d580dca-bb7a-4b7d-b30a-6dd4ae5a8040" />
 
 ## Version 2.1 - Enhanced Pairing and Usability
 
@@ -169,4 +169,5 @@ endfor
 - Comments can be added with `//`
 - Device list shows devices Windows has seen recently (not all may be currently available)
 - You can use partial device names if unique (e.g., `open ESP` instead of `open ESP32_Device`)
+
 
