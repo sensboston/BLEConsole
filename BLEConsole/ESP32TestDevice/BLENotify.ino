@@ -22,7 +22,7 @@
 // ============== CONFIGURATION ==============
 
 // Pairing mode: 0 = None, 1 = Static Passkey, 2 = Display Passkey
-#define PAIRING_MODE 1
+#define PAIRING_MODE 2
 
 // Static passkey (used only if PAIRING_MODE == 1)
 #define STATIC_PASSKEY 123456
@@ -188,8 +188,8 @@ void setup() {
     uint32_t passkey = STATIC_PASSKEY;
     esp_ble_gap_set_security_param(ESP_BLE_SM_SET_STATIC_PASSKEY, &passkey, sizeof(uint32_t));
     
-    // IO capability: Keyboard Only (client enters passkey)
-    esp_ble_io_cap_t iocap = ESP_IO_CAP_IN;
+    // IO capability: Display Only (ESP32 "displays" the static passkey, client enters it)
+    esp_ble_io_cap_t iocap = ESP_IO_CAP_OUT;
     esp_ble_gap_set_security_param(ESP_BLE_SM_IOCAP_MODE, &iocap, sizeof(esp_ble_io_cap_t));
     
     // Auth mode: bonding + MITM

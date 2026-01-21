@@ -47,7 +47,7 @@ namespace BLEConsole.Commands.UtilityCommands
                 "  read, r <name>**\t\t: read value from specific characteristic\n" +
                 "  write, w <name>**<value>\t: write value to specific characteristic\n" +
                 "  subs <name>**\t\t\t: subscribe to value change for specific characteristic\n" +
-                "  unsubs <name>** [all]\t\t: unsubscribe from value change for specific characteristic or unsubs all for all\n" +
+                "  unsubs [<name>**|all]\t\t: unsubscribe from specific characteristic, or all subscriptions (unsubs = unsubs all)\n" +
                 "  wait\t\t\t\t: wait for notification event on value change (you must be subscribed, see above)\n" +
                 "  pair [<mode> [<params>]]\t: pair the currently connected BLE device\n" +
                 "  \t\t\t\t: no mode               just pair\n" +
