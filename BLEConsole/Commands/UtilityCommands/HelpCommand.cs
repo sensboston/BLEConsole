@@ -27,7 +27,7 @@ namespace BLEConsole.Commands.UtilityCommands
                 "\n\n  help, ?\t\t\t: show help information\n" +
                 "  quit, q\t\t\t: quit from application\n" +
                 "  list, ls [w]\t\t\t: show available BLE devices\n" +
-                "  open <name>, <#> or <address>\t: connect to BLE device\n" +
+                "  open <name|#|addr> [pin]\t: connect to BLE device, with optional pairing PIN\n" +
                 "  delay <msec>\t\t\t: pause execution for a certain number of milliseconds\n" +
                 "  timeout <sec>\t\t\t: show/change connection timeout, default value is 3 sec\n" +
                 "  close\t\t\t\t: disconnect from currently connected device\n" +
