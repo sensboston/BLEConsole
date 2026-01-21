@@ -17,7 +17,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.6.0.0</ApplicationVersion>
+    <ApplicationVersion>2.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -99,9 +99,46 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\CommandRegistry.cs" />
+    <Compile Include="Commands\ConfigCommands\FormatCommand.cs" />
+    <Compile Include="Commands\DeviceCommands\CloseCommand.cs" />
+    <Compile Include="Commands\DeviceCommands\DeviceInfoCommand.cs" />
+    <Compile Include="Commands\DeviceCommands\ListCommand.cs" />
+    <Compile Include="Commands\DeviceCommands\OpenCommand.cs" />
+    <Compile Include="Commands\DeviceCommands\StatCommand.cs" />
+    <Compile Include="Commands\GattCommands\DescCommand.cs" />
+    <Compile Include="Commands\GattCommands\MtuCommand.cs" />
+    <Compile Include="Commands\GattCommands\ReadAllCommand.cs" />
+    <Compile Include="Commands\GattCommands\ReadCommand.cs" />
+    <Compile Include="Commands\GattCommands\ReadDescCommand.cs" />
+    <Compile Include="Commands\GattCommands\SetCommand.cs" />
+    <Compile Include="Commands\GattCommands\SubsCommand.cs" />
+    <Compile Include="Commands\GattCommands\UnsubsCommand.cs" />
+    <Compile Include="Commands\GattCommands\WriteCommand.cs" />
+    <Compile Include="Commands\GattCommands\WriteDescCommand.cs" />
+    <Compile Include="Commands\UtilityCommands\HelpCommand.cs" />
+    <Compile Include="Commands\UtilityCommands\QuitCommand.cs" />
+    <Compile Include="Core\BleContext.cs" />
+    <Compile Include="Core\IOutputWriter.cs" />
+    <Compile Include="Enums\AttributeType.cs" />
+    <Compile Include="Enums\DataFormat.cs" />
+    <Compile Include="Enums\GattNativeCharacteristicUuid.cs" />
+    <Compile Include="Enums\GattNativeDescriptorUuid.cs" />
+    <Compile Include="Enums\GattNativeServiceUuid.cs" />
+    <Compile Include="Enums\ProtocolErrorCode.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Models\BluetoothLEAttributeDisplay.cs" />
+    <Compile Include="Models\BluetoothLEDeviceDisplay.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IDeviceService.cs" />
+    <Compile Include="Services\IGattService.cs" />
+    <Compile Include="Utilities\DataFormatter.cs" />
+    <Compile Include="Utilities\DeviceLookup.cs" />
+    <Compile Include="Utilities\ProtocolErrorFormatter.cs" />
+    <Compile Include="Utilities\TaskExtensions.cs" />
+    <Compile Include="Utilities\UuidConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

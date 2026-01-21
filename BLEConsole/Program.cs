@@ -9,6 +9,14 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Security.Credentials;
+using BLEConsole.Models;
+using BLEConsole.Enums;
+using BLEConsole.Core;
+using BLEConsole.Commands;
+using BLEConsole.Commands.UtilityCommands;
+using BLEConsole.Commands.DeviceCommands;
+using BLEConsole.Commands.GattCommands;
+using BLEConsole.Commands.ConfigCommands;
 
 namespace BLEConsole
 {
@@ -63,6 +71,11 @@ namespace BLEConsole
 
         static TimeSpan _timeout = TimeSpan.FromSeconds(3);
 
+        // Command Pattern infrastructure
+        static BleContext _context;
+        static CommandRegistry _commandRegistry;
+        static IOutputWriter _output;
+
         static void Main(string[] args)
         {
             // Get app name and version
@@ -107,17 +120,119 @@ namespace BLEConsole
             }
         }
 
+        /// <summary>
+        /// Register all Command Pattern commands
+        /// </summary>
+        static void RegisterCommands()
+        {
+            _output = new ConsoleOutputWriter();
+            _commandRegistry = new CommandRegistry(_output);
+
+            // Utility commands - HelpCommand needs registry to show all commands
+            _commandRegistry.Register(new HelpCommand(_commandRegistry, _output));
+            _commandRegistry.Register(new QuitCommand(_output));
+
+            // Device commands
+            _commandRegistry.Register(new ListCommand(_output));
+            _commandRegistry.Register(new OpenCommand(_output));
+            _commandRegistry.Register(new CloseCommand(_output));
+            _commandRegistry.Register(new StatCommand(_output));
+            _commandRegistry.Register(new DeviceInfoCommand(_output));
+
+            // GATT commands
+            _commandRegistry.Register(new SetCommand(_output));
+            _commandRegistry.Register(new ReadCommand(_output));
+            _commandRegistry.Register(new ReadAllCommand(_output));
+            _commandRegistry.Register(new WriteCommand(_output));
+            _commandRegistry.Register(new DescCommand(_output));
+            _commandRegistry.Register(new ReadDescCommand(_output));
+            _commandRegistry.Register(new WriteDescCommand(_output));
+            _commandRegistry.Register(new SubsCommand(_output));
+            _commandRegistry.Register(new UnsubsCommand(_output));
+            _commandRegistry.Register(new MtuCommand(_output));
+
+            // Config commands
+            _commandRegistry.Register(new FormatCommand(_output));
+        }
+
+        /// <summary>
+        /// Sync state from static variables to BleContext
+        /// </summary>
+        static void SyncToContext()
+        {
+            _context.SelectedDevice = _selectedDevice;
+            _context.SelectedService = _selectedService;
+            _context.SelectedCharacteristic = _selectedCharacteristic;
+            _context.Timeout = _timeout;
+            _context.SendDataFormat = _sendDataFormat;
+
+            // Sync collections
+            _context.Services.Clear();
+            _context.Services.AddRange(_services);
+
+            _context.Characteristics.Clear();
+            _context.Characteristics.AddRange(_characteristics);
+
+            _context.Subscribers.Clear();
+            _context.Subscribers.AddRange(_subscribers);
+
+            _context.ReceivedDataFormats.Clear();
+            _context.ReceivedDataFormats.AddRange(_receivedDataFormat);
+        }
+
+        /// <summary>
+        /// Sync state from BleContext back to static variables
+        /// </summary>
+        static void SyncFromContext()
+        {
+            _selectedDevice = _context.SelectedDevice;
+            _selectedService = _context.SelectedService;
+            _selectedCharacteristic = _context.SelectedCharacteristic;
+            _timeout = _context.Timeout;
+            _sendDataFormat = _context.SendDataFormat;
+
+            // Sync collections
+            _services.Clear();
+            _services.AddRange(_context.Services);
+
+            _characteristics.Clear();
+            _characteristics.AddRange(_context.Characteristics);
+
+            _subscribers.Clear();
+            _subscribers.AddRange(_context.Subscribers);
+
+            _receivedDataFormat.Clear();
+            _receivedDataFormat.AddRange(_context.ReceivedDataFormats);
+        }
+
         static async Task MainAsync(string[] args)
         {
+            // Initialize Command Pattern infrastructure
+            _context = new BleContext();
+            _context.Timeout = _timeout;
+            _context.SendDataFormat = _sendDataFormat;
+            _context.ReceivedDataFormats.Clear();
+            _context.ReceivedDataFormats.AddRange(_receivedDataFormat);
+
+            // Set up callback for subscription notifications from Command Pattern
+            _context.OnValueChanged = (sender, eventArgs) => Characteristic_ValueChanged(sender, eventArgs);
+
+            RegisterCommands();
+
             // Start endless BLE device watcher
             var watcher = DeviceInformation.CreateWatcher(_aqsAllBLEDevices, _requestedBLEProperties, DeviceInformationKind.AssociationEndpoint);
             watcher.Added += (DeviceWatcher sender, DeviceInformation devInfo) =>
             {
-                if (_deviceList.FirstOrDefault(d => d.Id.Equals(devInfo.Id) || d.Name.Equals(devInfo.Name)) == null) _deviceList.Add(devInfo);
+                if (_deviceList.FirstOrDefault(d => d.Id.Equals(devInfo.Id) || d.Name.Equals(devInfo.Name)) == null)
+                {
+                    _deviceList.Add(devInfo);
+                    _context.DiscoveredDevices.Add(devInfo);
+                }
             };
             watcher.Updated += (DeviceWatcher sender, DeviceInformationUpdate diu) =>
             {
                 _deviceList.FirstOrDefault(d => d.Id.Equals(diu.Id))?.Update(diu);
+                _context.DiscoveredDevices.FirstOrDefault(d => d.Id.Equals(diu.Id))?.Update(diu);
             };
 
             //Watch for a device being removed by the watcher
@@ -126,7 +241,12 @@ namespace BLEConsole
             //    _deviceList.Remove(FindKnownDevice(devInfo.Id));
             //};
             watcher.EnumerationCompleted += (DeviceWatcher sender, object arg) => { sender.Stop(); };
-            watcher.Stopped += (DeviceWatcher sender, object arg) => { _deviceList.Clear(); sender.Start(); };
+            watcher.Stopped += (DeviceWatcher sender, object arg) =>
+            {
+                _deviceList.Clear();
+                _context.DiscoveredDevices.Clear();
+                sender.Start();
+            };
             watcher.Start();
 
             string cmd = string.Empty;
@@ -225,6 +345,32 @@ namespace BLEConsole
 
         static async Task HandleSwitch(string cmd, string parameters)
         {
+            // Try Command Pattern registry first
+            if (_commandRegistry != null)
+            {
+                // Sync state from static vars to context
+                SyncToContext();
+
+                // Try to execute command via registry
+                if (_commandRegistry.HasCommand(cmd))
+                {
+                    _exitCode = await _commandRegistry.ExecuteAsync(cmd, _context, parameters);
+
+                    // Sync state back from context to static vars
+                    SyncFromContext();
+
+                    // Check for quit command (returns -1)
+                    if (_exitCode == -1)
+                    {
+                        _doWork = false;
+                        _exitCode = 0;
+                    }
+
+                    return;
+                }
+            }
+
+            // Fall back to legacy switch statement for commands not yet migrated
             switch (cmd)
             {
                 case "if":

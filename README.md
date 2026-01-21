@@ -9,6 +9,20 @@ Windows command-line tool for interacting with Bluetooth LE devices
 This is a fork of https://raw.githubusercontent.com/sensboston/BLEConsole/master/BLEConsole/
 to which I added/modified the **pair** and **unpair** commands.
 
+## Version 2.0.0 - Major Architecture Update
+
+**New in v2.0.0:**
+- **Complete Refactoring**: Modernized codebase with Command Pattern architecture
+- **Descriptor Support**: Read and write GATT descriptors (e.g., CCCD for notifications)
+- **MTU Information**: Display current MTU size and effective payload
+- **Fast Writes**: WriteWithoutResponse support via `write -nr` flag
+- **Batch Read Operations**: New `read-all` command to read all characteristics in a service at once
+- **Device Info Helper**: Automatically read Device Information Service (DIS) characteristics
+- **Enhanced Properties Display**: Shows all 10 characteristic properties including WriteWithoutResponse, Broadcast, AuthenticatedSignedWrites, etc.
+- **Improved Error Reporting**: Better protocol error messages and status information
+
+See [CHANGELOG.md](./BLEConsole/CHANGELOG.md) for complete details.
+
 ### Requirements:
 
 Windows 10, BT 4.0 adapter
@@ -33,7 +47,14 @@ Windows 10, BT 4.0 adapter
 - **format**, **fmt** `[data_format]`: show/change display format, can be ASCII/UTF8/Dec/Hex/Bin
 - **set** `<service_name>` or `<#>`: set current service (for read/write operations)
 - **read**, **r** `<name>`**: read value from specific characteristic
+- **read-all**, **ra** `[service]`: read all characteristics in a service (batch operation)
 - **write**, **w** `<name>`** `<value>`: write value to specific characteristic
+- **write -nr** `<name>` `<value>`: write value using WriteWithoutResponse (faster, no ACK)
+- **desc** `<name>`: list all descriptors for a characteristic
+- **read-desc**, **rd** `<char>/<desc>`: read descriptor value
+- **write-desc**, **wd** `<char>/<desc>` `<value>`: write descriptor value
+- **mtu**: show current MTU size and effective payload
+- **device-info**, **di**, **info**: automatically read Device Information Service
 - **pair** `[<mode> [<params>]]`: pair the currently connected BLE device
    * no mode: just pair
    * mode=ProvidePin `<pin>`: pair with supplied pin
