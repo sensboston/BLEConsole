@@ -18,7 +18,7 @@ namespace BLEConsole.Commands.DeviceCommands
         public string Name => "pair";
         public string[] Aliases => new string[] { };
         public string Description => "Pair the currently connected BLE device";
-        public string Usage => "pair [pin <code>] | [mode=ProvidePin [code]] | [ConfirmOnly] | [DisplayPin] | [ConfirmPinMatch]";
+        public string Usage => "pair [<pin>] | [pin <code>] | [mode=ProvidePin [code]] | [ConfirmOnly] | [DisplayPin] | [ConfirmPinMatch]";
 
         public PairCommand(IOutputWriter output)
         {
@@ -109,6 +109,13 @@ namespace BLEConsole.Commands.DeviceCommands
                     Password = parts[2]
                 };
                 pairingKind = DevicePairingKinds.ProvidePasswordCredential;
+            }
+            // Handle direct PIN input: "pair 123456"
+            else if (parts.Length == 1 && !string.IsNullOrEmpty(parts[0]))
+            {
+                // Treat single parameter as PIN (for backwards compatibility)
+                _pairingPin = parts[0];
+                pairingKind = DevicePairingKinds.ProvidePin;
             }
 
             try
