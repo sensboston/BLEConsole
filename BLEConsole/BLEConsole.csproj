@@ -176,7 +176,9 @@
       <FileType>Assembly</FileType>
     </PublishFile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ESP32TestDevice\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="AppIcon.ico" />
   </ItemGroup>
