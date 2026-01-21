@@ -33,7 +33,7 @@ namespace BLEConsole.Commands.GattCommands
         {
             if (context.SelectedDevice == null)
             {
-                _output.WriteLine("No BLE device connected.");
+                _output.WriteLine("No BLE device is connected.");
                 return 1;
             }
 

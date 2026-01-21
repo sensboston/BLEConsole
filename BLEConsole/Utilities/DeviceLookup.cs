@@ -50,7 +50,7 @@ namespace BLEConsole.Utils
                         if (0 <= devNumber && devNumber < (collection as List<DeviceInformation>).Count)
                             result = (collection as List<DeviceInformation>)[devNumber].Id;
                         else
-                            Console.WriteLine("Device number {0:00} is not in device list range", devNumber);
+                            Console.WriteLine("Device #{0:00} is out of range.", devNumber);
                     }
                     else
                     {
@@ -59,7 +59,7 @@ namespace BLEConsole.Utils
                     }
                 }
                 else if (!Console.IsOutputRedirected)
-                    Console.WriteLine("Invalid device number {0}", name.Substring(1));
+                    Console.WriteLine("Invalid device number: {0}", name.Substring(1));
             }
             else if (CheckForValidBluetoothAddress(name))
             {
@@ -72,7 +72,7 @@ namespace BLEConsole.Utils
                 else if (foundDevices.Count == 1)
                     result = foundDevices.First().Id;
                 else if (!Console.IsOutputRedirected)
-                    Console.WriteLine("Found multiple devices with names started from {0}. Please provide an exact name.", name);
+                    Console.WriteLine("Found multiple devices with names starting with '{0}'. Please provide an exact name.", name);
             }
             else
             {
@@ -87,7 +87,7 @@ namespace BLEConsole.Utils
                     else if (foundDevices.Count == 1)
                         result = foundDevices.First().Id;
                     else if (!Console.IsOutputRedirected)
-                        Console.WriteLine("Found multiple devices with names started from {0}. Please provide an exact name.", name);
+                        Console.WriteLine("Found multiple devices with names starting with '{0}'. Please provide an exact name.", name);
                 }
                 else
                 {
@@ -99,12 +99,12 @@ namespace BLEConsole.Utils
                     if (foundDispAttrs.Count == 0)
                     {
                         if (!Console.IsOutputRedirected)
-                            Console.WriteLine("No service/characteristic found by name {0}.", name);
+                            Console.WriteLine("No service/characteristic found with name '{0}'.", name);
                     }
                     else if (foundDispAttrs.Count == 1)
                         result = foundDispAttrs.First().Name;
                     else if (!Console.IsOutputRedirected)
-                        Console.WriteLine("Found multiple services/characteristic with names started from {0}. Please provide an exact name.", name);
+                        Console.WriteLine("Found multiple services/characteristics with names starting with '{0}'. Please provide an exact name.", name);
                 }
             }
             return result;

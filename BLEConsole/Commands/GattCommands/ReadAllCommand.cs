@@ -31,7 +31,7 @@ namespace BLEConsole.Commands.GattCommands
         {
             if (context.SelectedDevice == null)
             {
-                _output.WriteLine("No device connected. Use 'open' first.");
+                _output.WriteLine("No device is connected. Use 'open' first.");
                 return 1;
             }
 

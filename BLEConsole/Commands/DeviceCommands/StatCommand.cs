@@ -22,7 +22,7 @@ namespace BLEConsole.Commands.DeviceCommands
         {
             if (context.SelectedDevice == null)
             {
-                _output.WriteLine("No device connected.");
+                _output.WriteLine("No device is connected.");
                 return Task.FromResult(0);
             }
 
@@ -36,17 +36,20 @@ namespace BLEConsole.Commands.DeviceCommands
 
             // Device is connected - show pairing status only if device supports pairing
             bool canPair = device.DeviceInformation.Pairing.CanPair;
+            bool isPaired = context.IsPaired(device);
+
             string pairingStatus = "";
             if (canPair)
             {
-                bool isPaired = context.IsPaired(device);
-                pairingStatus = isPaired ? " and is paired." : ", but is NOT paired.";
+                pairingStatus = isPaired ? ", paired" : ", not paired";
             }
-            else
+            _output.WriteLine($"Device {device.Name} is connected{pairingStatus}.");
+
+            // Show pairing support info
+            if (canPair)
             {
-                pairingStatus = ".";
+                _output.WriteLine($"Pairing: {(isPaired ? "paired" : "not paired")} (pairing supported)");
             }
-            _output.WriteLine($"Device {device.Name} is connected{pairingStatus}");
 
             // List all services
             if (context.Services.Count > 0)

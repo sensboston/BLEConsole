@@ -690,12 +690,12 @@ namespace BLEConsole
                 var dur = await _selectedDevice.DeviceInformation.Pairing.UnpairAsync();
                 if (dur.Status == DeviceUnpairingResultStatus.Unpaired)
                 {
-                    Console.WriteLine("Unpaired device");
+                    Console.WriteLine("Device unpaired successfully.");
                     SetPairingCache(_selectedDevice, false);
                 }
                 else
                 {
-                    Console.WriteLine($"Unable to unpair device:{dur.Status}");
+                    Console.WriteLine($"Unable to unpair device: {dur.Status}");
                     return 1;
                 }
             }
@@ -772,7 +772,7 @@ namespace BLEConsole
             }
             else
             {
-                Console.WriteLine("Invalid parameters.  Please see see the help");
+                Console.WriteLine("Invalid parameters. Please see help.");
                 return 1;
             }
 
@@ -793,12 +793,12 @@ namespace BLEConsole
             if (dur.Status == DevicePairingResultStatus.Paired)
             {
                 SetPairingCache(_selectedDevice, true);
-                Console.WriteLine("Paired device");
+                Console.WriteLine("Device paired successfully.");
             }
             else
             {
                 SetPairingCache(_selectedDevice, false);
-                Console.WriteLine($"Unable to pair device:{dur.Status}");
+                Console.WriteLine($"Unable to pair device: {dur.Status}");
             }
 
             return dur.Status == DevicePairingResultStatus.Paired ? 0 : 1;
@@ -998,7 +998,7 @@ namespace BLEConsole
         {
             if (_selectedDevice == null)
             {
-                Console.WriteLine("No device connected.");
+                Console.WriteLine("No device is connected.");
             }
             else
             {
@@ -1106,7 +1106,7 @@ namespace BLEConsole
             }
             else
             {
-                Console.WriteLine("Device name can not be empty.");
+                Console.WriteLine("Device name cannot be empty.");
                 retVal += 1;
             }
             return retVal;
@@ -1188,7 +1188,7 @@ namespace BLEConsole
                                     else
                                     {
                                         if (!Console.IsOutputRedirected)
-                                            Console.WriteLine("Service don't have any characteristic.");
+                                            Console.WriteLine("Service doesn't have any characteristics.");
                                         retVal += 1;
                                     }
                                 }
@@ -1335,7 +1335,7 @@ namespace BLEConsole
             }
             else
             {
-                Console.WriteLine("No BLE device connected.");
+                Console.WriteLine("No BLE device is connected.");
                 retVal += 1;
             }
             return retVal;
@@ -1471,7 +1471,7 @@ namespace BLEConsole
             else
             {
                 if (!Console.IsOutputRedirected)
-                    Console.WriteLine("No BLE device connected.");
+                    Console.WriteLine("No BLE device is connected.");
                 retVal += 1;
             }
             return retVal;
@@ -1618,7 +1618,7 @@ namespace BLEConsole
             else
             {
                 if (!Console.IsOutputRedirected)
-                    Console.WriteLine("No BLE device connected.");
+                    Console.WriteLine("No BLE device is connected.");
                 retVal += 1;
             }
             return retVal;

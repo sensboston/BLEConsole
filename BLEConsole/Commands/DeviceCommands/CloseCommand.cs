@@ -51,7 +51,7 @@ namespace BLEConsole.Commands.DeviceCommands
             }
             else
             {
-                _output.WriteLine("No device connected.");
+                _output.WriteLine("No device is connected.");
             }
 
             return 0;
