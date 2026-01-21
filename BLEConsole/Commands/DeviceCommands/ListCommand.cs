@@ -38,7 +38,7 @@ namespace BLEConsole.Commands.DeviceCommands
                 for (int i = 0; i < sortedDevices.Count; i++)
                 {
                     var device = sortedDevices[i];
-                    _output.WriteLine($"#{i:00}: {device.Id,-50} {device.Name}");
+                    _output.WriteLine($"#{i:00}: {device.Id,-50}{device.Name}");
                 }
             }
             else
@@ -53,7 +53,7 @@ namespace BLEConsole.Commands.DeviceCommands
                         btAddr = string.Join(":", Enumerable.Range(0, 6)
                             .Select(n => btAddr.Substring(n * 2, 2)));
                     }
-                    _output.WriteLine($"#{i:00}: {btAddr,-18} {device.Name}");
+                    _output.WriteLine($"#{i:00}: {btAddr,-18}{device.Name}");
                 }
             }
 
