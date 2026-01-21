@@ -136,6 +136,8 @@ namespace BLEConsole
             _commandRegistry.Register(new ListCommand(_output));
             _commandRegistry.Register(new OpenCommand(_output));
             _commandRegistry.Register(new CloseCommand(_output));
+            _commandRegistry.Register(new PairCommand(_output));
+            _commandRegistry.Register(new UnpairCommand(_output));
             _commandRegistry.Register(new StatCommand(_output));
             _commandRegistry.Register(new DeviceInfoCommand(_output));
 

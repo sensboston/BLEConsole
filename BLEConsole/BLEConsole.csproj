@@ -107,6 +107,8 @@
     <Compile Include="Commands\DeviceCommands\DeviceInfoCommand.cs" />
     <Compile Include="Commands\DeviceCommands\ListCommand.cs" />
     <Compile Include="Commands\DeviceCommands\OpenCommand.cs" />
+    <Compile Include="Commands\DeviceCommands\PairCommand.cs" />
+    <Compile Include="Commands\DeviceCommands\UnpairCommand.cs" />
     <Compile Include="Commands\DeviceCommands\StatCommand.cs" />
     <Compile Include="Commands\GattCommands\DescCommand.cs" />
     <Compile Include="Commands\GattCommands\MtuCommand.cs" />
@@ -143,6 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ESP32TestDevice\BLENotify.ino" />
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="System.Runtime.WindowsRuntime">
