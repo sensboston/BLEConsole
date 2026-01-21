@@ -147,11 +147,13 @@ namespace BLEConsole.Commands.DeviceCommands
                 }
                 else
                 {
-                    // Try simple pairing first, with fallback to DisplayPin
+                    // Try pairing with all supported methods
+                    // Including ProvidePin allows pairing with devices that display a random PIN
                     _output.WriteLine($"Attempting to pair...");
                     pairingInfo.Custom.PairingRequested += OnPairingRequested;
                     result = await pairingInfo.Custom.PairAsync(
                         DevicePairingKinds.ConfirmOnly |
+                        DevicePairingKinds.ProvidePin |
                         DevicePairingKinds.DisplayPin |
                         DevicePairingKinds.ConfirmPinMatch);
                     pairingInfo.Custom.PairingRequested -= OnPairingRequested;
@@ -188,9 +190,21 @@ namespace BLEConsole.Commands.DeviceCommands
 
                 case DevicePairingKinds.ProvidePin:
                     if (!string.IsNullOrEmpty(_pairingPin))
+                    {
+                        // Use pre-provided PIN
                         args.Accept(_pairingPin);
+                    }
                     else
-                        args.Accept();
+                    {
+                        // Device is displaying a PIN, prompt user to enter it
+                        _output.WriteLine("Device is displaying a PIN. Enter the PIN shown on the device:");
+                        Console.Write("PIN: ");
+                        string enteredPin = Console.ReadLine();
+                        if (!string.IsNullOrEmpty(enteredPin))
+                            args.Accept(enteredPin.Trim());
+                        else
+                            args.Accept();
+                    }
                     break;
 
                 case DevicePairingKinds.DisplayPin:
