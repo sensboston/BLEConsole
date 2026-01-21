@@ -4,6 +4,7 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
+using Windows.Storage.Streams;
 
 namespace BLEConsole.Core
 {
@@ -36,6 +37,7 @@ namespace BLEConsole.Core
         public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(3);
         public Enums.DataFormat SendDataFormat { get; set; } = Enums.DataFormat.UTF8;
         public List<Enums.DataFormat> ReceivedDataFormats { get; } = new List<Enums.DataFormat> { Enums.DataFormat.UTF8, Enums.DataFormat.Hex };
+        public ByteOrder ByteOrder { get; set; } = ByteOrder.LittleEndian;
 
         // Pairing cache
         private readonly Dictionary<string, bool> _pairings = new Dictionary<string, bool>();

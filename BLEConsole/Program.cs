@@ -153,6 +153,7 @@ namespace BLEConsole
 
             // Config commands
             _commandRegistry.Register(new FormatCommand(_output));
+            _commandRegistry.Register(new EndianCommand(_output));
         }
 
         /// <summary>

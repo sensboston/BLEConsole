@@ -60,7 +60,7 @@ namespace BLEConsole.Commands.GattCommands
                 return 1;
 
             // Format data
-            var buffer = DataFormatter.FormatData(value, context.SendDataFormat);
+            var buffer = DataFormatter.FormatData(value, context.SendDataFormat, context.ByteOrder);
             if (buffer == null)
             {
                 _output.WriteLine("Failed to format data.");

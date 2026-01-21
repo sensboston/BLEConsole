@@ -102,6 +102,7 @@
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\CommandRegistry.cs" />
     <Compile Include="Commands\ConfigCommands\FormatCommand.cs" />
+    <Compile Include="Commands\ConfigCommands\EndianCommand.cs" />
     <Compile Include="Commands\DeviceCommands\CloseCommand.cs" />
     <Compile Include="Commands\DeviceCommands\DeviceInfoCommand.cs" />
     <Compile Include="Commands\DeviceCommands\ListCommand.cs" />
