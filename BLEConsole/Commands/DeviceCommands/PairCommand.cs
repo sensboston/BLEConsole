@@ -18,7 +18,7 @@ namespace BLEConsole.Commands.DeviceCommands
         public string Name => "pair";
         public string[] Aliases => new string[] { };
         public string Description => "Pair the currently connected BLE device";
-        public string Usage => "pair [pin <code>] | [ConfirmOnly] | [DisplayPin] | [ConfirmPinMatch] | [ProvidePasswordCredential <user> <pass>]";
+        public string Usage => "pair [pin <code>] | [mode=ProvidePin <code>] | [ConfirmOnly] | [DisplayPin] | [ConfirmPinMatch]";
 
         public PairCommand(IOutputWriter output)
         {
@@ -47,11 +47,49 @@ namespace BLEConsole.Commands.DeviceCommands
                 return 0;
             }
 
-            // Parse parameters
+            // Parse parameters - support both "pin 123456" and "mode=ProvidePin 123456" syntax
             DevicePairingKinds? pairingKind = null;
-            var parts = (parameters ?? "").Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var paramStr = (parameters ?? "").Trim();
+            var parts = paramStr.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (parts.Length >= 2 && (parts[0].Equals("pin", StringComparison.OrdinalIgnoreCase) ||
+            // Handle mode=<Mode> syntax
+            if (parts.Length >= 1 && parts[0].StartsWith("mode=", StringComparison.OrdinalIgnoreCase))
+            {
+                var mode = parts[0].Substring(5); // Remove "mode=" prefix
+                if (mode.Equals("ProvidePin", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (parts.Length >= 2)
+                    {
+                        _pairingPin = parts[1];
+                        pairingKind = DevicePairingKinds.ProvidePin;
+                    }
+                    else
+                    {
+                        _output.WriteLine("PIN code required for ProvidePin mode. Usage: pair mode=ProvidePin <code>");
+                        return 1;
+                    }
+                }
+                else if (mode.Equals("ConfirmOnly", StringComparison.OrdinalIgnoreCase))
+                {
+                    pairingKind = DevicePairingKinds.ConfirmOnly;
+                }
+                else if (mode.Equals("DisplayPin", StringComparison.OrdinalIgnoreCase))
+                {
+                    pairingKind = DevicePairingKinds.DisplayPin;
+                }
+                else if (mode.Equals("ConfirmPinMatch", StringComparison.OrdinalIgnoreCase))
+                {
+                    pairingKind = DevicePairingKinds.ConfirmPinMatch;
+                }
+                else
+                {
+                    _output.WriteLine($"Unknown pairing mode: {mode}");
+                    _output.WriteLine("Valid modes: ProvidePin, ConfirmOnly, DisplayPin, ConfirmPinMatch");
+                    return 1;
+                }
+            }
+            // Handle legacy "pin 123456" or "ProvidePin 123456" syntax
+            else if (parts.Length >= 2 && (parts[0].Equals("pin", StringComparison.OrdinalIgnoreCase) ||
                                        parts[0].Equals("ProvidePin", StringComparison.OrdinalIgnoreCase)))
             {
                 _pairingPin = parts[1];
