@@ -80,7 +80,7 @@ namespace BLEConsole
         {
             // Get app name and version
             var name = Assembly.GetCallingAssembly().GetName();
-            _versionInfo = string.Format($"{name.Name} ver. {name.Version.Major:0}.{name.Version.Minor:0}.{name.Version.Build:0}\n");
+            _versionInfo = string.Format($"{name.Name} ver. {name.Version.Major}.{name.Version.Minor}\n");
             if (!Console.IsInputRedirected) Console.WriteLine(_versionInfo);
 
             // Set Ctrl+Break/Ctrl+C handler

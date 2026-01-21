@@ -21,7 +21,7 @@ namespace BLEConsole.Commands.UtilityCommands
         public Task<int> ExecuteAsync(BleContext context, string parameters)
         {
             var name = Assembly.GetCallingAssembly().GetName();
-            var versionInfo = $"{name.Name} ver. {name.Version.Major:0}.{name.Version.Minor:0}.{name.Version.Build:0}";
+            var versionInfo = $"{name.Name} ver. {name.Version.Major}.{name.Version.Minor}";
 
             _output.WriteLine(versionInfo +
                 "\n\n  help, ?\t\t\t: show help information\n" +
