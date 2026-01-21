@@ -98,12 +98,12 @@ namespace BLEConsole.Utils
                     var foundDispAttrs = (collection as List<Models.BluetoothLEAttributeDisplay>).Where(d => d.Name.ToLower().StartsWith(name.ToLower())).ToList();
                     if (foundDispAttrs.Count == 0)
                     {
-                        if (Console.IsOutputRedirected)
+                        if (!Console.IsOutputRedirected)
                             Console.WriteLine("No service/characteristic found by name {0}.", name);
                     }
                     else if (foundDispAttrs.Count == 1)
                         result = foundDispAttrs.First().Name;
-                    else if (Console.IsOutputRedirected)
+                    else if (!Console.IsOutputRedirected)
                         Console.WriteLine("Found multiple services/characteristic with names started from {0}. Please provide an exact name.", name);
                 }
             }

@@ -19,8 +19,8 @@ namespace BLEConsole.Models
         public string Id => DeviceInformation.Id;
         public string Name => DeviceInformation.Name;
         public bool IsPaired => DeviceInformation.Pairing.IsPaired;
-        public bool IsConnected => (bool?)DeviceInformation.Properties["System.Devices.Aep.IsConnected"] == true;
-        public bool IsConnectable => (bool?)DeviceInformation.Properties["System.Devices.Aep.Bluetooth.Le.IsConnectable"] == true;
+        public bool IsConnected => DeviceInformation.Properties.TryGetValue("System.Devices.Aep.IsConnected", out object val) && val is bool b && b;
+        public bool IsConnectable => DeviceInformation.Properties.TryGetValue("System.Devices.Aep.Bluetooth.Le.IsConnectable", out object val) && val is bool b && b;
 
         public IReadOnlyDictionary<string, object> Properties => DeviceInformation.Properties;
 

@@ -55,9 +55,15 @@ namespace BLEConsole.Commands.GattCommands
                         string formattedData = DataFormatter.FormatValueMultipleFormattes(data, context.ReceivedDataFormats, context.ByteOrder);
                         _output.WriteLine(formattedData);
                     }
-                    else
+                    else if (context.ReceivedDataFormats.Count == 1)
                     {
                         string formattedData = DataFormatter.FormatValue(data, context.ReceivedDataFormats[0], context.ByteOrder);
+                        _output.WriteLine(formattedData);
+                    }
+                    else
+                    {
+                        // Default to UTF8 if no format specified
+                        string formattedData = DataFormatter.FormatValue(data, Enums.DataFormat.UTF8, context.ByteOrder);
                         _output.WriteLine(formattedData);
                     }
                     return 0;

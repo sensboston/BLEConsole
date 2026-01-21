@@ -522,6 +522,7 @@ namespace BLEConsole
                 case "wait":
                     _notifyCompleteEvent = new ManualResetEvent(false);
                     _notifyCompleteEvent.WaitOne(_timeout);
+                    _notifyCompleteEvent.Dispose();
                     _notifyCompleteEvent = null;
                     break;
 
@@ -666,9 +667,9 @@ namespace BLEConsole
         // So we need to keep track of it ourselves
         //        
         static bool IsPaired(BluetoothLEDevice device) =>
-            _pairings.ContainsKey(_selectedDevice.DeviceId)
-                ? _pairings[_selectedDevice.DeviceId]
-                : device.DeviceInformation.Pairing.IsPaired;
+            device != null && _pairings.ContainsKey(device.DeviceId)
+                ? _pairings[device.DeviceId]
+                : device?.DeviceInformation.Pairing.IsPaired ?? false;
 
         static void SetPairingCache(BluetoothLEDevice device, bool isPaired) =>
             _pairings[device.DeviceId] = isPaired;
@@ -904,7 +905,8 @@ namespace BLEConsole
             uint milliseconds = (uint)_timeout.TotalMilliseconds;
             uint.TryParse(param, out milliseconds);
             _delayEvent = new ManualResetEvent(false);
-            _delayEvent.WaitOne((int)milliseconds, true);
+            _delayEvent.WaitOne((int)milliseconds);
+            _delayEvent.Dispose();
             _delayEvent = null;
         }
 
