@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using BLEConsole.Core;
+using Windows.Devices.Bluetooth;
 
 namespace BLEConsole.Commands.DeviceCommands
 {
@@ -26,14 +27,47 @@ namespace BLEConsole.Commands.DeviceCommands
             }
 
             var device = context.SelectedDevice;
-            _output.WriteLine($"Device name: {device.Name}");
-            _output.WriteLine($"Device ID: {device.DeviceId}");
-            _output.WriteLine($"Connection status: {device.ConnectionStatus}");
-            _output.WriteLine($"Paired: {context.IsPaired(device)}");
 
-            if (context.SelectedService != null)
+            if (device.ConnectionStatus == BluetoothConnectionStatus.Disconnected)
             {
-                _output.WriteLine($"Selected service: {context.SelectedService.Name}");
+                _output.WriteLine($"Device {device.Name} is disconnected.");
+                return Task.FromResult(0);
+            }
+
+            // Device is connected
+            bool isPaired = context.IsPaired(device);
+            _output.WriteLine($"Device {device.Name} is connected" +
+                (isPaired ? " and is paired." : ", but is NOT paired."));
+
+            // List all services
+            if (context.Services.Count > 0)
+            {
+                _output.WriteLine("Available services:");
+                for (int i = 0; i < context.Services.Count; i++)
+                {
+                    _output.WriteLine($"#{i:00}: {context.Services[i].Name}");
+                }
+
+                // If service is selected
+                if (context.SelectedService != null)
+                {
+                    _output.WriteLine($"Selected service: {context.SelectedService.Name}");
+
+                    // List all characteristics
+                    if (context.Characteristics.Count > 0)
+                    {
+                        _output.WriteLine("Available characteristics:");
+                        for (int i = 0; i < context.Characteristics.Count; i++)
+                        {
+                            _output.WriteLine($"#{i:00}: {context.Characteristics[i].Name}\t{context.Characteristics[i].Chars}");
+                        }
+
+                        if (context.SelectedCharacteristic != null)
+                        {
+                            _output.WriteLine($"Selected characteristic: {context.SelectedCharacteristic.Name}");
+                        }
+                    }
+                }
             }
 
             return Task.FromResult(0);
