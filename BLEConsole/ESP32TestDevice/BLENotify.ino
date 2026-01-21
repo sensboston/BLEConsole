@@ -22,13 +22,13 @@
 // ============== CONFIGURATION ==============
 
 // Pairing mode: 0 = None, 1 = Static Passkey, 2 = Display Passkey
-#define PAIRING_MODE 2
+#define PAIRING_MODE 1
 
 // Static passkey (used only if PAIRING_MODE == 1)
 #define STATIC_PASSKEY 123456
 
 // Clear bonding data on startup (set to 1 to reset, then back to 0)
-#define CLEAR_BONDING 1
+#define CLEAR_BONDING 0
 
 // ===========================================
 
